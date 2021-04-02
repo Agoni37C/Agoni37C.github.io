@@ -316,6 +316,20 @@
                         </a>
                       </li>
                     
+                      <li>
+                        <a href="/star/">
+                          <i class="fa fa-gratipay" aria-hidden="true"></i>
+                          追星
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/drama/">
+                          <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                          追剧
+                        </a>
+                      </li>
+                    
                   </ul>
                 
               </li>
@@ -449,31 +463,64 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <h2 id="导入模块："><a href="#导入模块：" class="headerlink" title="导入模块："></a>导入模块：</h2><p> from selenium import webdriver</p>
-<p> from selenium.common.exceptions import NoSuchElementException</p>
-<h2 id="选择浏览器：driver-webdriver-Firefox"><a href="#选择浏览器：driver-webdriver-Firefox" class="headerlink" title="选择浏览器：driver = webdriver.Firefox()"></a>选择浏览器：driver = webdriver.Firefox()</h2><p> 打开url:driver.get(“<a href="http://www.baidu.com&quot;" target="_blank" rel="noopener">http://www.baidu.com&quot;</a>)</p>
-<h2 id="等待："><a href="#等待：" class="headerlink" title="等待："></a>等待：</h2><p> driver.implicitly_wait(30)</p>
-<p> driver.set_page_load_timeout(30)</p>
-<p> driver.set_script_timeout(30)</p>
-<h2 id="关闭浏览器：driver-quit-driver-close"><a href="#关闭浏览器：driver-quit-driver-close" class="headerlink" title="关闭浏览器：driver.quit()/driver.close()"></a>关闭浏览器：driver.quit()/driver.close()</h2><p> 前进/后退：driver.forward()/driver.back()</p>
-<p> 在这里向大家推荐一个学习交流群：672899761</p>
-<h2 id="刷新：driver-refresh"><a href="#刷新：driver-refresh" class="headerlink" title="刷新：driver.refresh()"></a>刷新：driver.refresh()</h2><p> 返回当前页面标题：driver.title</p>
-<p> 返回当前页面url：driver.current_url</p>
-<p> 返回当前浏览器的所有窗口：driver.window_handles</p>
-<p> 返回当前浏览器的窗口句柄：driver.current_window_handle</p>
-<p> 选择窗口：driver.switch_to_window(“window_name”)</p>
-<h2 id="对话框操作：driver-switch-to-alert-选择窗口对象"><a href="#对话框操作：driver-switch-to-alert-选择窗口对象" class="headerlink" title="对话框操作：driver.switch_to_alert() #选择窗口对象"></a>对话框操作：driver.switch_to_alert() #选择窗口对象</h2><p> accept() #点击确认</p>
-<p> dismiss() #点击取消</p>
-<p> text #获取文本值</p>
-<p> send_keys(“key”) #输入值</p>
-<h2 id="元素定位"><a href="#元素定位" class="headerlink" title="元素定位"></a>元素定位</h2><p> 定位元素（单个）：driver.find_element(by=”id”,value=None)</p>
-<p> Id定位： driver.find_element_by_id(“id_name”)</p>
-<p> Name定位：driver.find_element_by_name(“name”)</p>
-<p> Css定位： driver.find_element_by_css_selector(“#foo”)</p>
-<p> Xpath定位：driver.find_element_by_xpath(“//select[@id=’nr’]/option[2]”)</p>
-<p> Link定位：driver.find_element_by_link_text(u”链接”)</p>
-<p> Tag定位： driver.find_element_by_tag_name(“foo”)</p>
-<p> 截取当前页面： driver.get_screenshot_as_file(‘/Screenshots/foo.png’)</p>
+          <h1 id="导入模块："><a href="#导入模块：" class="headerlink" title="导入模块："></a>导入模块：</h1><pre><code class="code"> from selenium import webdriver
+
+ from selenium.common.exceptions import NoSuchElementException
+</code></pre>
+<h1 id="选择浏览器："><a href="#选择浏览器：" class="headerlink" title="选择浏览器："></a>选择浏览器：</h1><pre><code class="code"> driver = webdriver.Firefox()
+
+ 打开url:driver.get(&quot;http://www.baidu.com&quot;)
+</code></pre>
+<h1 id="等待："><a href="#等待：" class="headerlink" title="等待："></a>等待：</h1><pre><code class="code"> driver.implicitly_wait(30)
+
+ driver.set_page_load_timeout(30)
+
+ driver.set_script_timeout(30)
+</code></pre>
+<h1 id="关闭浏览器："><a href="#关闭浏览器：" class="headerlink" title="关闭浏览器："></a>关闭浏览器：</h1><pre><code class="code"> driver.quit()/driver.close()
+
+ 前进/后退：driver.forward()/driver.back()
+
+ 在这里向大家推荐一个学习交流群：672899761
+</code></pre>
+<h1 id="刷新："><a href="#刷新：" class="headerlink" title="刷新："></a>刷新：</h1><pre><code class="code"> driver.refresh()
+
+ 返回当前页面标题：driver.title
+
+ 返回当前页面url：driver.current_url
+
+ 返回当前浏览器的所有窗口：driver.window_handles
+
+ 返回当前浏览器的窗口句柄：driver.current_window_handle
+
+ 选择窗口：driver.switch_to_window(“window_name”)
+
+ 对话框操作：driver.switch_to_alert() 
+</code></pre>
+<h1 id="选择窗口对象"><a href="#选择窗口对象" class="headerlink" title="选择窗口对象"></a>选择窗口对象</h1><pre><code class="code"> accept() #点击确认
+
+ dismiss() #点击取消
+
+ text #获取文本值
+
+ send_keys(“key”) #输入值
+</code></pre>
+<h1 id="元素定位"><a href="#元素定位" class="headerlink" title="元素定位"></a>元素定位</h1><pre><code class="code"> 定位元素（单个）：driver.find_element(by=”id”,value=None)
+
+ Id定位： driver.find_element_by_id(“id_name”)
+
+ Name定位：driver.find_element_by_name(“name”)
+
+ Css定位： driver.find_element_by_css_selector(“#foo”)
+
+ Xpath定位：driver.find_element_by_xpath(“//select[@id=’nr’]/option[2]”)
+
+ Link定位：driver.find_element_by_link_text(u”链接”)
+
+ Tag定位： driver.find_element_by_tag_name(“foo”)
+
+ 截取当前页面： driver.get_screenshot_as_file(&#39;/Screenshots/foo.png&#39;)
+</code></pre>
 <p>发布于 2021-03-23</p>
 
         </div>
@@ -813,6 +860,20 @@ $(document).ready(function() {
                 <a href="/tags/收藏/">
                   <i class="fa fa-laptop" aria-hidden="true"></i>
                   收藏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/star/">
+                  <i class="fa fa-gratipay" aria-hidden="true"></i>
+                  追星
+                </a>
+              </li>
+            
+              <li>
+                <a href="/drama/">
+                  <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                  追剧
                 </a>
               </li>
             
