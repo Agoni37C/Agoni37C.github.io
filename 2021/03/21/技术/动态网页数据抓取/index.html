@@ -1,0 +1,1056 @@
+<!-- 页面预加载 <script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  
+  <title itemprop="name">⛄动态网页数据抓取☃ | flechazo</title>
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/lib.min.css" media="all">
+  <link rel="stylesheet" href="/css/font.css" media="all">
+  <link rel="stylesheet" href="/css/insight.css" media="all">
+  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+  <link rel="stylesheet" href="/css/zoom.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+  <script>
+  /*Initial Variables*/
+  var mashiro_option = new Object();
+  var mashiro_global = new Object();
+  mashiro_option.NProgressON = true;
+  /* 
+   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+   */
+  mashiro_option.email_domain = "";
+  mashiro_option.email_name = "";
+  mashiro_option.cookie_version_control = "";
+  mashiro_option.qzone_autocomplete = false;
+  mashiro_option.site_name = "さらflechazoその一见钟情";
+  mashiro_option.author_name = "一见钟情";
+  mashiro_option.site_url = "/about/";
+  mashiro_option.v_appId = "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz";
+  mashiro_option.v_appKey = "mgOpfzbkHYqU92CV4IDlAUHQ";
+  mashiro_option.mathjax = "0";
+  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
+  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+  // mashiro_option.float_player_on = true;
+
+  /*End of Initial Variables*/
+  </script>
+  <script type="text/javascript">
+  var bg = "https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/40.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/41.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/3.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/4.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/5.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/6.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/7.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/8.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/9.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/10.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/11.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/12.jpg".split(",");
+  var bgindex = Math.floor(Math.random()*bg.length);
+  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+    alert('朋友，IE浏览器未适配哦~');
+  }
+  </script>
+  <style type="text/css">
+  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
+  </style>
+  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+  </style>
+</head>
+</html>
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <div class="headertop filter-grid">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="/about/">
+           <!--<img src="">-->
+		   
+		   <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+		  <!--  <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">-->
+        </a>
+      </div>
+      <div class="header-info">
+        <p>Live your life with passion! With some drive!</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+          
+            
+              
+                <li>
+                  <a href="http://github.com/Agoni37C" target="_blank" class="social-github" title="github">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/github.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="sina">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/sina.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://music.163.com/#/my/m/music/playlist?id=572492190" target="_blank" class="social-github" title="wangyiyun">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wangyiyun.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://www.zhihu.com/people/xpwo-pei?is_all=1" target="_blank" class="social-github" title="zhihu">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/zhihu.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="email">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/email.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChat.jpg">
+                  </div>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatHao.jpg">
+                  </div>
+                </li>
+              
+            
+          
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <div id="video-container" style="">
+    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
+    </video>
+    <div id="video-btn" class="loadvideo videolive">
+    </div>
+    <div id="video-add">
+    </div>
+    <div class="video-stu">
+    </div>
+  </div>
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true">
+      </i>
+    </span>
+  </div>
+</div>
+    <div id="page" class="site wrapper">
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">さらflechazoその</span>
+            <span class="shironeko">一见钟情</span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search">
+      </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1">
+      </div>
+      <div class="line line2">
+      </div>
+      <div class="line line3">
+      </div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <ul id="menu-new" class="menu">
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+                    首页
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+                    归档
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/categories/技术/">
+                          <i class="fa fa-code" aria-hidden="true"></i>
+                          技术
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/生活/">
+                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                          生活
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://www.yutu.cn/popsoft_1_2.html">
+                          <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                          资源
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/随想/">
+                          <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                          随想
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/转载/">
+                          <i class="fa fa-book" aria-hidden="true"></i>
+                          转载
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    清单
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/tags/美文/">
+                          <i class="fa fa-gift" aria-hidden="true"></i>
+                          美文
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/music/">
+                          <i class="fa fa-headphones" aria-hidden="true"></i>
+                          歌单
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/图集/">
+                          <i class="fa fa-photo" aria-hidden="true"></i>
+                          图集
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/bangumi/">
+                          <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                          番组
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/视频/">
+                          <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                          视频
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/收藏/">
+                          <i class="fa fa-laptop" aria-hidden="true"></i>
+                          收藏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/star/">
+                          <i class="fa fa-gratipay" aria-hidden="true"></i>
+                          追星
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/drama/">
+                          <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                          追剧
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="/tags/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-tag" aria-hidden="true"></i>
+                    标签
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/categories/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-bookmark" aria-hidden="true"></i>
+                    分类
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/comment/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+                    留言板
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+                    关于
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/about/">
+                          <i class="fa fa-meetup" aria-hidden="true"></i>
+                          我？
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/theme-sakura/">
+                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                          主题
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/donate/">
+                          <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                          赞赏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/links/">
+                          <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                          友人
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          Lab
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/log in/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          login
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    杂
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          网站
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/site muban/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          模板
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/atom.xml">
+                          <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                          RSS
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/49.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/49.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      ⛄动态网页数据抓取☃</h1>
+      <p class="entry-census">
+        <span>
+          <a href="">
+            <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="">flechazo</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2021-3-21<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <p></p>
+<p></p>
+<div class="clear"></div><br><div class="postBody"><br><div id="cnblogs_post_body" class="blogpost-body blogpost-body-html"><br><h1><strong>动态网页数据抓取</strong></h1><br><h2><strong><span style="font-family: 微软雅黑">什么是</span>AJAX：</strong></h2><br><p class="p">AJAX（Asynchronouse JavaScript And XML）异步JavaScript和XML。过在后台与服务器进行少量数据交换，Ajax 可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新。传统的网页（不使用Ajax）如果需要更新内容，必须重载整个网页页面。因为传统的在传输数据格式方面，使用的是XML语法。因此叫做AJAX，其实现在数据交互基本上都是使用JSON<span style="font-family: 微软雅黑">。使用</span>AJAX加载的数据，即使使用了JS，将数据渲染到了浏览器中，在<span style="font-family: 宋体">右键</span>-&gt;查看网页源代码<span style="font-family: 微软雅黑">还是不能看到通过</span>ajax加载的数据，只能看到使用这个url加载的html代码。</p><br><h2><strong><span style="font-family: 微软雅黑">获取</span>ajax数据的方式：</strong></h2><br><ol><br><li><span style="font-family: 微软雅黑">直接分析</span>ajax调用的接口。然后通过代码请求这个接口。</li><br><li><span style="font-family: 微软雅黑">使用</span>Selenium+chromedriver模拟浏览器行为获取数据。</li><br></ol><br><table border="0" cellspacing="2"><br><tbody><br><tr><br><td valign="center" width="103"><br><p align="center"><strong>方式</strong></p><br></td><br><td valign="center" width="308"><br><p align="center"><strong>优点</strong></p><br></td><br><td valign="center" width="288"><br><p align="center"><strong>缺点</strong></p><br></td><br></tr><br><tr><br><td valign="center" width="103"><br><p>分析接口</p><br></td><br><td valign="center" width="308"><br><p>直接可以请求到数据。不需要做一些解析工作。代码量少，性能高。</p><br></td><br><td valign="center" width="288"><br><p>分析接口比较复杂，特别是一些通过js混淆的接口，要有一定的js功底。容易被发现是爬虫。</p><br></td><br></tr><br><tr><br><td valign="center" width="103"><br><p>selenium</p><br></td><br><td valign="center" width="308"><br><p>直接模拟浏览器的行为。浏览器能请求到的，使用selenium也能请求到。爬虫更稳定。</p><br></td><br><td valign="center" width="288"><br><p>代码量多。性能低。</p><br></td><br></tr><br></tbody><br></table><br><h2><strong>Selenium+chromedriver获取动态数据：</strong></h2><br><p class="p">Selenium<span style="font-family: 微软雅黑">相当于是一个机器人。可以模拟人类在浏览器上的一些行为，自动处理浏览器上的一些行为，比如点击，填充数据，删除</span>cookie等。chromedriver是一个驱动Chrome<span style="font-family: 微软雅黑">浏览器的驱动程序，使用他才可以驱动浏览器。当然针对不同的浏览器有不同的</span>driver。以下列出了不同浏览器及其对应的driver：</p><br><ol><br><li>Chrome：<a href="https://sites.google.com/a/chromium.org/chromedriver/downloads" target="_blank" rel="noopener"><span style="text-decoration: underline">https://sites.google.com/a/chromium.org/chromedriver/downloads</span></a></li><br><li>Firefox：<a href="https://github.com/mozilla/geckodriver/releases" target="_blank" rel="noopener"><span style="text-decoration: underline">https://github.com/mozilla/geckodriver/releases</span></a></li><br><li>Edge：<a href="https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/" target="_blank" rel="noopener"><span style="text-decoration: underline">https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/</span></a></li><br><li>Safari：<a href="https://webkit.org/blog/6900/webdriver-support-in-safari-10/" target="_blank" rel="noopener"><span style="text-decoration: underline">https://webkit.org/blog/6900/webdriver-support-in-safari-10/</span></a></li><br><li>安装Selenium：Selenium<span style="font-family: 微软雅黑">有很多语言的版本，有</span>java、ruby、python等。我们下载python版本的就可以了。</li><br><li>pip install selenium</li><br><li>安装chromedriver：下载完成后，放到不需要权限的纯英文目录下就可以了。</li><br></ol><br><h2><strong><span style="font-family: 微软雅黑">安装</span>Selenium和chromedriver：</strong></h2><br><h3><strong>快速入门：</strong><strong>&nbsp;</strong></h3><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;">from selenium import webdriver<br><br># chromedriver的绝对路径<br><br>driver_path = r’D:\ProgramApp\chromedriver\chromedriver.exe’<br><br><br># 初始化一个driver，并且指定chromedriver的路径<br><br>driver = webdriver.Chrome(executable_path=driver_path)<br><br># 请求网页<br><br>driver.get(“<a href="https://www.baidu.com/&quot;" target="_blank" rel="noopener">https://www.baidu.com/&quot;</a>)<br><br># 通过page_source获取网页源代码<br><br>print(driver.page_source)<br></pre><br></div><br><p>　　</p><br><h3><strong>selenium常用操作：</strong></h3><br><p class="p">更多教程参考：<a href="#introduction"><span style="text-decoration: underline">http://selenium-python.readthedocs.io/installation.html#introduction</span></a></p><br><h4><strong>关闭页面：</strong></h4><br><ol><br><li>driver.close()：关闭当前页面。</li><br><li>driver.quit()：退出整个浏览器。</li><br></ol><br><h4><strong>定位元素：</strong></h4><br><p class="p">要注意，find_element是获取第一个满足条件的元素。find_elements是获取所有满足条件的元素。</p><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;">find_element_by_id：根据id来查找某个元素。等价于：<br>submitTag = driver.find_element_by_id(‘su’)<br>submitTag1 = driver.find_element(By.ID,’su’)<br><br>find_element_by_class_name：根据类名查找元素。 等价于：<br>submitTag = driver.find_element_by_class_name(‘su’)<br>submitTag1 = driver.find_element(By.CLASS_NAME,’su’)<br><br>find_element_by_name：根据name属性的值来查找元素。等价于：<br>submitTag = driver.find_element_by_name(‘email’)<br>submitTag1 = driver.find_element(By.NAME,’email’)<br><br>find_element_by_tag_name：根据标签名来查找元素。等价于：<br>submitTag = driver.find_element_by_tag_name(‘div’)<br>submitTag1 = driver.find_element(By.TAG_NAME,’div’)<br><br>find_element_by_xpath：根据xpath语法来获取元素。等价于：<br>submitTag = driver.find_element_by_xpath(‘//div’)<br>submitTag1 = driver.find_element(By.XPATH,’//div’)<br><br>find_element_by_css_selector：根据css选择器选择元素。等价于：<br>submitTag = driver.find_element_by_css_selector(‘//div’)<br>submitTag1 = driver.find_element(By.CSS_SELECTOR,’//div’)<br></pre><br></div><br><p>　　</p><br><h4><strong>操作表单元素：</strong></h4><br><p>操作输入框：分为两步。第一步：找到这个元素。第二步：使用send_keys(value)，将数据填充进去。示例代码如下：</p><br><p>inputTag = driver.find_element_by_id(‘kw’)</p><br><p>inputTag.send_keys(‘python’)</p><br><p class="p">使用clear方法可以清除输入框中的内容。示例代码如下：</p><br><p class="pre">&nbsp;inputTag.clear()</p><br><p class="pre">&nbsp;</p><br><p class="pre"><span style="font-family: 微软雅黑">操作</span>checkbox：因为要选中checkbox标签，在网页中是通过鼠标点击的。因此想要选中checkbox标签，那么先选中这个标签，然后执行click事件。示例代码如下：</p><br><p class="pre">rememberTag = driver.find_element_by_name(“rememberMe”)</p><br><p class="pre">rememberTag.click()</p><br><p class="pre">&nbsp;</p><br><p class="pre"><span style="font-family: 微软雅黑">选择</span>select：select元素不能直接点击。因为点击后还需要选中元素。这时候selenium就专门为select标签提供了一个类selenium.webdriver.support.ui.Select。将获取到的元素当成参数传到这个类中，创建这个对象。以后就可以使用这个对象进行选择了。示例代码如下：</p><br><p class="pre">from&nbsp;selenium.webdriver.support.ui import&nbsp;Select</p><br><p class="pre"># <span style="font-family: 宋体">选中这个标签，然后使用</span><span style="font-family: Calibri">Select</span><span style="font-family: 宋体">创建对象</span></p><br><p class="pre">selectTag = Select(driver.find_element_by_name(“jumpMenu”))</p><br><p class="pre"># <span style="font-family: 宋体">根据索引选择</span></p><br><p class="pre">selectTag.select_by_index(1)</p><br><p class="pre"># <span style="font-family: 宋体">根据值选择</span></p><br><p class="pre">selectTag.select_by_value(“<a href="http://www.95yueba.com&quot;" target="_blank" rel="noopener">http://www.95yueba.com&quot;</a>)</p><br><p class="pre"># <span style="font-family: 宋体">根据可视的文本选择</span></p><br><p class="pre">selectTag.select_by_visible_text(“95<span style="font-family: 宋体">秀客户端</span><span style="font-family: Calibri">“</span>)</p><br><p class="pre"># <span style="font-family: 宋体">取消选中所有选项</span></p><br><p class="pre">selectTag.deselect_all()</p><br><p class="pre">&nbsp;</p><br><p>操作按钮：操作按钮有很多种方式。比如单击、右击、双击等。这里讲一个最常用的。就是点击。直接调用click函数就可以了。示例代码如下：</p><br><p class="pre">inputTag = driver.find_element_by_id(‘su’)</p><br><p class="pre">&nbsp;inputTag.click()</p><br><p class="pre">&nbsp;</p><br><p class="pre">&nbsp;</p><br><h4><strong>行为链：</strong></h4><br><p class="p">有时候在页面中的操作可能要有很多步，那么这时候可以使用鼠标行为链类ActionChains来完成。比如现在要将鼠标移动到某个元素上并执行点击事件。那么示例代码如下：</p><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;">inputTag = driver.find_element_by_id(‘kw’)<br>submitTag = driver.find_element_by_id(‘su’)<br>actions = ActionChains(driver)<br>actions.move_to_element(inputTag)<br>actions.send_keys_to_element(inputTag,’python’)<br>actions.move_to_element(submitTag)<br>actions.click(submitTag)<br>actions.perform()</pre><br></div><br><p class="p">还有更多的鼠标相关的操作。</p><br><ul><br><li>click_and_hold(element)：点击但不松开鼠标。</li><br><li>context_click(element)：右键点击。</li><br><li>double_click(element)：双击。 更多方法参考：<a href="http://selenium-python.readthedocs.io/api.html" target="_blank" rel="noopener"><span style="text-decoration: underline">http://selenium-python.readthedocs.io/api.html</span></a></li><br></ul><br><p>&nbsp;</p><br><p>&nbsp;</p><br><h4><strong>Cookie操作：</strong></h4><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;">获取所有的cookie：<br>for cookie in driver.get_cookies():<br>     print(cookie)<br><br>根据cookie的key获取value：<br> value = driver.get_cookie(key)<br><br>删除所有的cookie：<br> driver.delete_all_cookies()<br><br>删除某个cookie：<br> driver.delete_cookie(key)<br></pre><br></div><br><p>　　</p><br><p>&nbsp;</p><br><h4><strong>页面等待：</strong></h4><br><p class="p"><span style="font-family: 微软雅黑">现在的网页越来越多采用了</span> Ajax 技术，这样程序便不能确定何时某个元素完全加载出来了。如果实际页面等待时间过长导致某个dom元素还没出来，但是你的代码直接使用了这个WebElement，那么就会抛出NullPointer的异常。为了解决这个问题。所以 Selenium 提供了两种等待方式：一种是隐式等待、一种是显式等待。</p><br><ol><br><li>隐式等待：调用driver.implicitly_wait<span style="font-family: 微软雅黑">。那么在获取不可用的元素之前，会先等待</span>10秒中的时间。示例代码如下</li><br></ol><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;">driver = webdriver.Chrome(executable_path=driver_path)<br>driver.implicitly_wait(10)<br># 请求网页<br>driver.get(“<a href="https://www.douban.com/&quot;" target="_blank" rel="noopener">https://www.douban.com/&quot;</a>)<br></pre><br></div><br><p>　　2/显示等待：显示等待是表明某个条件成立后才执行获取元素的操作。也可以在等待的时候指定一个最大的时间，如果超过这个时间那么就抛出一个异常。显示等待应该使用selenium.webdriver.support.excepted_conditions期望的条件和selenium.webdriver.support.ui.WebDriverWait来配合完成。示例代码如下：</p><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;"> from selenium import webdriver<br> from selenium.webdriver.common.by import By<br> from selenium.webdriver.support.ui import WebDriverWait<br> from selenium.webdriver.support import expected_conditions as EC<br><br> driver = webdriver.Firefox()<br><br> driver.get(“<a href="http://somedomain/url_that_delays_loading&quot;" target="_blank" rel="noopener">http://somedomain/url_that_delays_loading&quot;</a>)<br><br> try:<br><br>     element = WebDriverWait(driver, 10).until(<br><br>         EC.presence_of_element_located((By.ID, “myDynamicElement”))<br><br>     )<br><br> finally:<br><br>     driver.quit()</pre><br></div><br><p>一些其他的等待条件：</p><br><ul><br><li>presence_of_element_located：某个元素已经加载完毕了。</li><br><li>presence_of_all_emement_located：网页中所有满足条件的元素都加载完毕了。</li><br><li>element_to_be_cliable：某个元素是可以点击了。</li><br></ul><br><p class="p">更多条件参考：<a href="http://selenium-python.readthedocs.io/waits.html" target="_blank" rel="noopener"><span style="text-decoration: underline">http://selenium-python.readthedocs.io/waits.html</span></a></p><br><p class="p">&nbsp;</p><br><p class="p">&nbsp;</p><br><h4><strong>切换页面：</strong></h4><br><p class="p"><span style="font-family: 微软雅黑">有时候窗口中有很多子</span>tab页面。这时候肯定是需要进行切换的。</p><br><p class="p">selenium提供了一个叫做switch_to_window来进行切换，具体切换到哪个页面，可以从driver.window_handles中找到。示例代码如下：</p><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;"># 打开一个新的页面<br><br>self.driver.execute_script(“window.open(‘<a href="https://www.baidu.com&#39;)&quot;" target="_blank" rel="noopener">https://www.baidu.com&#39;)&quot;</a>)<br><br>#显示当前页面的url<br><br>driver.current_url   //还是百度页面<br><br># 切换到这个新的页面中<br>driver.switch_to_window(driver.window_handles[1])<br></pre><br></div><br><p>　　</p><br><p>&nbsp;</p><br><h4><strong><span style="font-family: 微软雅黑">设置代理</span>ip：</strong></h4><br><p class="p"><span style="font-family: 微软雅黑">有时候频繁爬取一些网页。服务器发现你是爬虫后会封掉你的</span>ip地址。这时候我们可以更改代理ip。更改代理ip，不同的浏览器有不同的实现方式。这里以Chrome浏览器为例来讲解：</p><br><div class="cnblogs_Highlighter"><br><pre class="brush:python;gutter:true;">from selenium import webdriver<br><br>options = webdriver.ChromeOptions()  //设置存储浏览器的信息<br><br>//添加代理服务器<br><br>options.add_argument(“–proxy-server=<a href="http://110.73.2.248:8123&quot;" target="_blank" rel="noopener">http://110.73.2.248:8123&quot;</a>)<br><br>driver_path = r”D:\ProgramApp\chromedriver\chromedriver.exe”<br><br>driver = webdriver.Chrome(executable_path=driver_path,chrome_options=options)<br><br>driver.get(‘<a href="http://httpbin.org/ip&#39;" target="_blank" rel="noopener">http://httpbin.org/ip&#39;</a>)</pre><br></div><br><h4>&nbsp;</h4><br><p>&nbsp;</p><br><h4>WebElement<strong>元素：</strong></h4><br><p class="p">from selenium.webdriver.remote.webelement import WebElement类是每个获取出来的元素的所属类。<br>有一些常用的属性：</p><br><p>get_attribute：这个标签的某个属性的值。</p><br><p>screentshot：获取当前页面的截图。这个方法只能在driver上使用。<br>driver的对象类，也是继承自WebElement。</p><br><p>&nbsp;</p><br><p>.</p><br></div></div>
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatpay.jpg"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre full previous">
+          
+            <a href="/2021/03/21/技术/python 用正则表达式筛选文本信息的实例/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/48.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/48.jpg">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                ⛄python 用正则表达式筛选文本信息的实例☃</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz",
+        appKey: "mgOpfzbkHYqU92CV4IDlAUHQ",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg" itemprop="image" alt="flechazo" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="" itemprop="url" rel="author">flechazo</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div>    
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            // PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 flechazo<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy 2021不闻星河须臾固执走向你</p>
+    </div>
+    <div class="footer-device">
+    <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;">Theme <a href="https://github.com/honjun/hexo-theme-sakura" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a>&<a href="https://www.i-flechazo-y.top/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">flechazo</a>, Powered by Flechazo, Hosted by Coding Pages</a>
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<script src="/js/botui.js"></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+/* <![CDATA[ */
+if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+} else {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+}
+/* ]]> */
+
+</script>
+<script>
+$(document).ready(function() {
+  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+    if ($(".pattern-center").length > 0) { //有图的情况
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+      });
+    } else {
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+      });
+    }
+    var offsetTop = $('.toc').offset().top - 95;
+    window.onscroll = function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop >= offsetTop) {
+        $('.toc').addClass('toc-fixed');
+      } else {
+        $('.toc').removeClass('toc-fixed');
+      }
+    }
+  }
+});
+</script>
+
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">さらflechazoその一见钟情</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="http://github.com/Agoni37C" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="http://weibo.com/mashirozx?is_all=1" class="fa fa-weibo" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=954655431&site=qq&menu=yes" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/categories/技术/">
+                  <i class="fa fa-code" aria-hidden="true"></i>
+                  技术
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/生活/">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                  生活
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://www.yutu.cn/popsoft_1_2.html">
+                  <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                  资源
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/随想/">
+                  <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                  随想
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/转载/">
+                  <i class="fa fa-book" aria-hidden="true"></i>
+                  转载
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            清单
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/tags/美文/">
+                  <i class="fa fa-gift" aria-hidden="true"></i>
+                  美文
+                </a>
+              </li>
+            
+              <li>
+                <a href="/music/">
+                  <i class="fa fa-headphones" aria-hidden="true"></i>
+                  歌单
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/图集/">
+                  <i class="fa fa-photo" aria-hidden="true"></i>
+                  图集
+                </a>
+              </li>
+            
+              <li>
+                <a href="/bangumi/">
+                  <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                  番组
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/视频/">
+                  <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                  视频
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/收藏/">
+                  <i class="fa fa-laptop" aria-hidden="true"></i>
+                  收藏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/star/">
+                  <i class="fa fa-gratipay" aria-hidden="true"></i>
+                  追星
+                </a>
+              </li>
+            
+              <li>
+                <a href="/drama/">
+                  <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                  追剧
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/tags/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-tag" aria-hidden="true"></i>
+            标签
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/categories/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-bookmark" aria-hidden="true"></i>
+            分类
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/comment/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+            留言板
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/donate/">
+                  <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                  赞赏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/links/">
+                  <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                  友人
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/log in/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  login
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            杂
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  网站
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/site muban/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  模板
+                </a>
+              </li>
+            
+              <li>
+                <a href="/atom.xml">
+                  <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                  RSS
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 hexo-sakura</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!-- require MetingJS -->
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<meting-js
+
+    id="572492190"
+
+    server="netease"
+
+    type="playlist"
+
+    fixed="true"
+
+    autoplay="false"
+
+    loop="all"
+
+    order="random"
+
+    preload="auto"
+
+    volume="0.7"
+
+    mutex="true"
+
+</meting-js>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"Live2d# 修改项 npm-module package name"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+<script src="/Live2d/autoload.js"></script>
+</html>
+<!-- 样式二（飘动的彩带） -->
+<script src="https://g.joyinshare.com/hc/piao.js" type="text/javascript"></script>
+<!-- 樱花飘落特效 -->
+<script src="https://cdn.jsdelivr.net/gh/wallleap/cdn/js/sakura.js"></script>
