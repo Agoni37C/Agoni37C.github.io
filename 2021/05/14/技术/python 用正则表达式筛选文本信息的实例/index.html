@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">⛄hexo-admin后台管理博客☃ | flechazo</title>
+  <title itemprop="name">⛄python 用正则表达式筛选文本信息的实例☃ | flechazo</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -289,7 +289,7 @@
                       </li>
                     
                       <li>
-                        <a href="/tags/图集/">
+                        <a href="/photos/">
                           <i class="fa fa-photo" aria-hidden="true"></i>
                           图集
                         </a>
@@ -468,11 +468,11 @@
 
   <div class="pattern-center single-center">
     <!-- 有配图默认渲染第一张 -->
-    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/45.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/45.jpg">
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/48.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/48.jpg">
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      ⛄hexo-admin后台管理博客☃</h1>
+      ⛄python 用正则表达式筛选文本信息的实例☃</h1>
       <p class="entry-census">
         <span>
           <a href="">
@@ -484,7 +484,7 @@
         </span>
         <span class="bull">
         ·</span>
-        2021-3-21<span class="bull">
+        2021-5-14<span class="bull">
         ·</span>
       <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
@@ -498,9 +498,18 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <p></p><h1>hexo-admin后台管理博客</h1><p></p>
-<p></p><h2>需求</h2><p></p>
-<p>像Hexo这种静态博客用起来很方便，但是硬伤就是没有后台管理，每次想写博客或者说想要修改原博客的话，都需要在本机上找markdown文件，修改之后发布，尤其是如果机器上没有安装hexo,git等工具的时候，就无法修改了。因此hexo可不可以以像wp,ghost这种有后台管理, 随时随地编辑博客呢?</p><br><p>正巧hexo专门有一个插件<a href="https://jaredforsyth.com/hexo-admin/" target="_blank" rel="noopener">hexo-admin</a> 提供了在web UI下增删改查博客的功能，我也正好有一个VPS, 于是就有了下面的一种方法.</p><br><h2>解决方法</h2><br><p>首先说一下条件与需求。 我自己有一个的VPS，本来是可以直接将hexo部署到VPS的，但是考虑到自己维护的VPS的稳定性等问题，最后决定将hexo的静态页面部署github-pages上。 </p><br><p>我的目的有两个:</p><br><ul><br><li><p>拥有在线编辑博客的后台</p></li><br><li><p>本地机器同时也可以编辑发布博客</p></li><br><li><p>二者需要保持同步</p></li><br></ul><br><p>基于这样的需求，仅仅靠github pages显然不可行了,必须借助VPS了.保持同步的意思是VPS的内容与本地机器上的博客的资源要保持一致。就是说我在线修改了某篇博客，然后之后如果可以很简单的同步到本地，使得两端保持同步，反过来一样。</p><br><p>我的做法是:</p><br><ul><br><li><p>将hexo目录下的相关文件包括_config.yml,source/等文件建立一个私人repo(个人使用coding.net)</p></li><br><li><p>VPS上安装好hexo,具体过程与换台机器安装同理, 可参考这篇博客<a href="http://shomy.top/2017/01/27/hexo-migrate-solution/" target="_blank" rel="noopener">hexo迁移重装</a>。</p></li><br><li><p>VPS上安装hexo-admin插件，这样可以在线编辑了. 在这一步的时候, 为了方便,我用了一个子域名以及在VPS上用nginx做前段端口转发.</p></li><br></ul><br><p>到这里后台管理基本没有问题了. 接下来就是在线发布了. 正巧的是hexo-admin提供了这个功能, 有一个Deploy的功能,具体实现是使用nodejs的<code>spawn</code>函数来执行发布脚本的. 一开始不太懂<code>spawn</code>这个函数的使用, 就直接在deploy中随便输入了东西,结果各种 spawn err.  后来查过资料,才知道deploy的输入的位置其实是对<code>hexo-admin</code>的配置里面<code>deployCommand</code>的选项,可以为空. 打个比方,如果我在<code>deployCommand</code>写的是<code>./hexo-deploy</code>, 然后点击deploy按钮之后, 后台就可以执行<code>hexo-deploy</code>脚本的内容了. 有了这个接口就非常灵活了. 因为基于此, 我们不但来发布博客,甚至可以把同步的脚本加进去.具体参考 <a href="https://github.com/jaredly/hexo-admin/issues/70" target="_blank" rel="noopener">https://github.com/jaredly/he…</a></p><br><p>下面说一下发布以及同步的操作:</p><br><ul><br><li><p>在博客目录写一个有关git同步的小脚本:<code>server-upload.sh</code> 用来同步VPS目录下的变化，主要代码其实就是先<code>git pull</code> 拉取repo最新, 之后在push. 具体脚本代码不再赘述.</p></li><br><li><br><p>建一个<code>hexo-deploy</code>的脚本,内容:</p><br><pre><code>hexo g &amp;&amp; hexo d<br>./server-upload.sh</code></pre><br></li><br><li><br><p>利用hexo-admin的deploy功能，可以在线发布，注意修改<code>_config.yml</code>: 加上hexo-admin的admin选项, 加一个<code>deployCommand: ./hexo-deploy</code>的字段,如下:</p><br><pre><code>admin:<br>    username: XXX<br>    password: XXXXX<br>    deployCommand: ‘./hexo-deploy’</code></pre><br></li><br><li><p>编辑完博客时候，发布的时候，需要点击hexo-admin的deploy。这样在后台就可以执行前面定义的<code>hexo-deloy</code>脚本了</p></li><br><li><p>本地机器也需要有一个<code>upload.sh</code>的脚本, 每次同样需要先git pull 在git push 到私人repo. 其实就是版本控制那一套.</p></li><br></ul><br><p>到现在基本完成了自己可以随时随地编辑博客并且多端同步的需求了. 之前也考虑过CI持续集成,但是大部分都是再建立一个分支, 需要把博客的source公开, 不太合适. 所以就选择了hexo-admin这种方法. </p><br><p>这篇博客便是在线完成的.<br><span class="img-wrap"><img src="http://img.suoniao.com/FoDI1IJf8tExRQSwWdw2mHXbfkzg"></span></p><br><p>其实这里面的坑还是蛮多的(主要不熟悉node). 此外开始使用supervisor做后台运行监控, 结果不知为何, 在<code>hexo d</code>包括git的pull或者push等操作,都会报错,提示让我确认git用户, 但是我已经设置了<code>git config</code>的email和name. 查了很多资料也没有解决, 后来直接抛弃supervisor, 直接使用<code>nohup</code>来放后台运行了.  大概是这样了, 有什么问题可以留言或者邮件.</p>
+          <p></p><h1 class="article-title">python 用正则表达式筛选文本信息的实例</h1><p></p>
+<div class="writer"><br><p class="dtls-msg"><br><span class="dtls-msg-time">2021-03-01 00:17</span><span class="dtls-msg-link" title="来源">bug_hero</span> <span class="dtls-msg-fenlei" title="所属分类">Python </span><br></p><br></div>
+
+<div class="single-excerpt"><br><p><br>今天小编就为大家分享一篇python 用正则表达式筛选文本信息的实例，具有很好的参考价值，希望对大家有所帮助。一起跟随小编过来看看吧<br></p><br></div>
+
+<p><div class="nr1"></div></p>
+<p><script>dy(“nr1”)</script><br></p>
+<p><div class="article-content"></div></p>
+<p><br>本文主要介绍如何对多个文本进行读取，并采用<a href="/article/96878.html">正则表达式</a>对其中的<a href="/article/15215.html">信息</a>进行<a href="/article/76197.html">筛选</a>，将筛选出来的信息存写到一个新文本。</p><br><p><br><span style="color: #ff0000"><strong>文本基础操作</strong></span></p><br><p><br>打开文件：open(&lsquo;文件名&#39;，&lsquo;打开方式&#39;)&gt;&gt;&gt;file=open(r&#39;C:\Users\yuanlei\Desktop\mytxt.txt&#39;,&#39;w+&#39;).为避免报错，在文件名的引号前加个r.</p><br><p><br><strong>文件打开方式：</strong>只读&mdash;&mdash;r或rt,rb为二进制文件；打开文件前清空文件内容&mdash;&mdash;w或wt；在文末写入&mdash;&mdash;a+；</p><br><p><br>清空内容然后在文末写入&mdash;&mdash;w+；写到文件任意位置&mdash;&mdash;r+;</p><br><p><br><strong>关闭文件：</strong>文件打开运行好后必须要关闭&mdash;&mdash;文件名.close()&gt;&gt;&gt;mytxt.close()</p><br><p><br>读取文件中的内容：将每行内容，包括换行符，作为一个元素存入数组&mdash;&mdash;lines=file_object.readlines()，但是这样会把换行符也赋进去</p><br><p><br>去除换行符&mdash;&mdash;new_lines=lines.splitlines()</p><br><p><br><strong>os包：</strong>import os 获取文件地址&mdash;&mdash;os.listdir(父文件地址)</p><br><p><br><span style="background-color: #ccffcc"><strong>下面附上实现摘要中说的功能的完整代码：</strong></span></p>
+
+<p><td class="code"><br>                            <div class="container"><br>                                <div class="line number1 index0 alt2"><br>                                    <code class="py comments"># coding: utf-8</code></div><br>                                <div class="line number2 index1 alt1"><br>                                    <code class="py comments">#读取文本中的中英文数据并使用正则表达式将所需数据筛选入到一个新文本中</code></div><br>                                <div class="line number3 index2 alt2"><br>                                    <code class="py keyword">import</code> <code class="py plain">re</code></div><br>                                <div class="line number4 index3 alt1"><br>                                    <code class="py keyword">import</code> <code class="py plain">os</code></div><br>                                <div class="line number5 index4 alt2"><br>                                    &nbsp;</div><br>                                <div class="line number6 index5 alt1"><br>                                    <code class="py comments">#zhengze函数对读取到的数据进行筛选，并将筛选好的数据存入数组new_lines</code></div><br>                                <div class="line number7 index6 alt2"><br>                                    <code class="py plain">new_lines</code><code class="py keyword">=</code><code class="py plain">[]&nbsp;&nbsp;&nbsp; </code><code class="py comments">#申明new_lines数组</code></div><br>                                <div class="line number8 index7 alt1"><br>                                    <code class="py keyword">def</code> <code class="py plain">zhengze(f):</code></div><br>                                <div class="line number9 index8 alt2"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">regex_str</code><code class="py keyword">=</code><code class="py string">&quot;.<em>?(l.</em>?e).*&quot;</code></div><br>                                <div class="line number10 index9 alt1"><br>                                    <code class="py spaces">&nbsp;</code><code class="py keyword">for</code> <code class="py plain">x </code><code class="py keyword">in</code> <code class="py plain">f:</code></div><br>                                <div class="line number11 index10 alt2"><br>                                    <code class="py spaces">&nbsp;&nbsp;</code><code class="py plain">new_x </code><code class="py keyword">=</code> <code class="py plain">x.splitlines()&nbsp; </code><code class="py comments">#注意：splitlines是将传入的字符串去除&#39;\n&#39;之后以数组的形式传出，而不是字符串形式</code></div><br>                                <div class="line number12 index11 alt1"><br>                                    <code class="py spaces">&nbsp;&nbsp;</code><code class="py plain">match_obj</code><code class="py keyword">=</code><code class="py plain">re.match(regex_str,new_x[</code><code class="py value">0</code><code class="py plain">])</code></div><br>                                <div class="line number13 index12 alt2"><br>                                    <code class="py spaces">&nbsp;&nbsp;</code><code class="py keyword">if</code> <code class="py plain">match_obj:</code></div><br>                                <div class="line number14 index13 alt1"><br>                                    <code class="py spaces">&nbsp;&nbsp;&nbsp;</code><code class="py plain">new_lines.append(match_obj.group(</code><code class="py value">1</code><code class="py plain">))</code></div><br>                                <div class="line number15 index14 alt2"><br>                                    <code class="py spaces">&nbsp;&nbsp;</code><code class="py keyword">else</code><code class="py plain">:</code></div><br>                                <div class="line number16 index15 alt1"><br>                                    <code class="py spaces">&nbsp;&nbsp;&nbsp;</code><code class="py plain">new_lines.append(</code><code class="py string">&#39;no&#39;</code><code class="py plain">)</code></div><br>                                <div class="line number17 index16 alt2"><br>                                    <code class="py spaces">&nbsp;</code><code class="py keyword">return</code> <code class="py plain">new_lines</code></div><br>                                <div class="line number18 index17 alt1"><br>                                    &nbsp;</div><br>                                <div class="line number19 index18 alt2"><br>                                    <code class="py comments">#获取指定文件夹下的所有文本的绝对地址，并存入数组file_path</code></div><br>                                <div class="line number20 index19 alt1"><br>                                    <code class="py plain">path</code><code class="py keyword">=</code><code class="py plain">r</code><code class="py string">&#39;C:\Users\yuanlei\Desktop\new_file_txt&#39;</code></div><br>                                <div class="line number21 index20 alt2"><br>                                    <code class="py plain">file_path</code><code class="py keyword">=</code><code class="py plain">[]</code></div><br>                                <div class="line number22 index21 alt1"><br>                                    <code class="py keyword">for</code> <code class="py plain">filename </code><code class="py keyword">in</code> <code class="py plain">os.listdir(path):&nbsp; </code><code class="py comments">#获取path下所有文件的路径</code></div><br>                                <div class="line number23 index22 alt2"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">file_path.append((os.path.join(path,filename)))</code></div><br>                                <div class="line number24 index23 alt1"><br>                                    <code class="py functions">print</code> <code class="py plain">file_path</code></div><br>                                <div class="line number25 index24 alt2"><br>                                    &nbsp;</div><br>                                <div class="line number26 index25 alt1"><br>                                    <code class="py comments">#对每个文本调用正则函数进行筛选,筛选过后的数据存入数组final</code></div><br>                                <div class="line number27 index26 alt2"><br>                                    <code class="py keyword">for</code> <code class="py plain">adress </code><code class="py keyword">in</code> <code class="py plain">file_path:</code></div><br>                                <div class="line number28 index27 alt1"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">file_object</code><code class="py keyword">=</code><code class="py functions">open</code><code class="py plain">(adress)</code></div><br>                                <div class="line number29 index28 alt2"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">lines </code><code class="py keyword">=</code> <code class="py plain">file_object.readlines( )&nbsp; </code><code class="py comments">#将文本中的内容以数组的形式（每行为一个元素）赋给lines</code></div><br>                                <div class="line number30 index29 alt1"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">file_object.close()</code></div><br>                                <div class="line number31 index30 alt2"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">final</code><code class="py keyword">=</code><code class="py plain">zhengze(lines)</code></div><br>                                <div class="line number32 index31 alt1"><br>                                    <code class="py functions">print</code> <code class="py plain">final</code></div><br>                                <div class="line number33 index32 alt2"><br>                                    &nbsp;</div><br>                                <div class="line number34 index33 alt1"><br>                                    <code class="py comments">#将筛选出来的数据写入新文本re_new.txt</code></div><br>                                <div class="line number35 index34 alt2"><br>                                    <code class="py plain">file_2</code><code class="py keyword">=</code><code class="py functions">open</code><code class="py plain">(r</code><code class="py string">&#39;C:\Users\yuanlei\Desktop\re_new.txt&#39;</code><code class="py plain">,</code><code class="py string">&#39;w+&#39;</code><code class="py plain">)</code></div><br>                                <div class="line number36 index35 alt1"><br>                                    <code class="py keyword">for</code> <code class="py plain">x </code><code class="py keyword">in</code> <code class="py plain">final:</code></div><br>                                <div class="line number37 index36 alt2"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">file_2.write(x)</code></div><br>                                <div class="line number38 index37 alt1"><br>                                    <code class="py spaces">&nbsp;</code><code class="py plain">file_2.write(</code><code class="py string">&#39;\n&#39;</code><code class="py plain">)</code></div><br>                                <div class="line number39 index38 alt2"><br>                                    <code class="py plain">file_2.close()</code></div><br>                            </div><br>                        </td><br>                    <br>                <br>            </p>
+
         </div>
         <!-- .entry-content -->
         <div class="single-reward">
@@ -531,15 +540,15 @@
           
             <div class="post-nepre half previous">
           
-            <a href="/2021/03/21/技术/Hexo-Theme-Sakura/" rel="prev">
+            <a href="/2021/05/15/技术/Python读写txt文本文件的操作方法全解析/" rel="prev">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/background/30.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/background/30.jpg">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/50.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/50.jpg">
               </div>
               <span class="label">
               Previous Post</span>
               <div class="info">
                 <h3>
-                Hexo-Theme-Sakura</h3>
+                ⛄Python读写txt文本文件的操作方法全解析☃</h3>
                 <hr>
               </div>
             </a>
@@ -549,15 +558,15 @@
           
             <div class="post-nepre half next">
           
-            <a href="/2021/03/21/技术/Python读写txt文本文件的操作方法全解析/" rel="next">
+            <a href="/2021/05/13/技术/动态网页数据抓取/" rel="next">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/50.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/50.jpg">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/49.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/49.jpg">
               </div>
               <span class="label">
               Next Post</span>
               <div class="info">
                 <h3>
-                ⛄Python读写txt文本文件的操作方法全解析☃</h3>
+                ⛄动态网页数据抓取☃</h3>
                 <hr>
               </div>
             </a>
@@ -830,7 +839,7 @@ $(document).ready(function() {
               </li>
             
               <li>
-                <a href="/tags/图集/">
+                <a href="/photos/">
                   <i class="fa fa-photo" aria-hidden="true"></i>
                   图集
                 </a>

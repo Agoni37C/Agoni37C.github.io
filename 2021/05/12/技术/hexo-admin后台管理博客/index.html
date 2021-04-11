@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">⛄Python读写txt文本文件的操作方法全解析☃ | flechazo</title>
+  <title itemprop="name">⛄hexo-admin后台管理博客☃ | flechazo</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -289,7 +289,7 @@
                       </li>
                     
                       <li>
-                        <a href="/tags/图集/">
+                        <a href="/photos/">
                           <i class="fa fa-photo" aria-hidden="true"></i>
                           图集
                         </a>
@@ -468,11 +468,11 @@
 
   <div class="pattern-center single-center">
     <!-- 有配图默认渲染第一张 -->
-    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/50.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/50.jpg">
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/45.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/45.jpg">
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      ⛄Python读写txt文本文件的操作方法全解析☃</h1>
+      ⛄hexo-admin后台管理博客☃</h1>
       <p class="entry-census">
         <span>
           <a href="">
@@ -484,7 +484,7 @@
         </span>
         <span class="bull">
         ·</span>
-        2021-3-21<span class="bull">
+        2021-5-12<span class="bull">
         ·</span>
       <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
@@ -498,8 +498,9 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <div id="content"><br><p><strong>一、文件的打开和创建</strong></p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’)<br>&gt;&gt;&gt; f.read()<br>‘hello python!\nhello world!\n’<br>&gt;&gt;&gt; f<br>&lt;open file ‘/tmp/test.txt’, mode ‘r’ at 0x7fb2255efc00&gt;<br></pre><br></div><br><p>&nbsp;<br><br><strong>二、文件的读取<br><br></strong>步骤：打开 – 读取 – 关闭</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’)<br>&gt;&gt;&gt; f.read()<br>‘hello python!\nhello world!\n’<br>&gt;&gt;&gt; f.close()<br><br></pre><br><p><br><br></p><br><p>读取数据是后期数据处理的必要步骤。.txt是广泛使用的数据文件格式。一些.csv, .xlsx等文件可以转换为.txt 文件进行读取。我常使用的是Python自带的I/O接口，将数据读取进来存放在list中，然后再用numpy科学计算包将list的数据转换为array格式，从而可以像MATLAB一样进行科学计算。</p><br><p>下面是一段常用的读取txt文件代码，可以用在大多数的txt文件读取中<br><br></p><br><div class="jb51code"><br><pre class="brush:py;"><br>filename = ‘array_reflection_2D_TM_vertical_normE_center.txt’ # txt文件和当前脚本在同一目录下，所以不用写具体路径<br>pos = []<br>Efield = []<br>with open(filename, ‘r’) as file_to_read:<br>  while True:<br>    lines = file_to_read.readline() # 整行读取数据<br>    if not lines:<br>      break<br>      pass<br>     p_tmp, E_tmp = [float(i) for i in lines.split()] # 将整行数据分割处理，如果分割符是空格，括号里就不用传入参数，如果是逗号， 则传入‘，’字符。<br>     pos.append(p_tmp)  # 添加新读取的数据<br>     Efield.append(E_tmp)<br>     pass<br>   pos = np.array(pos) # 将数据从list类型转换为array类型。<br>   Efield = np.array(Efield)<br>   pass<br></pre><br></div><br><p>例如下面是将要读入的txt文件<br><br></p><br><p><img alt="2016626171647895.png (429×301)" src="//img.jbzj.com/file_images/article/201606/2016626171647895.png&#63;201652617172"></p><br><p>经过读取后，在Enthought Canopy的variable window查看读入的数据， 左侧为pos，右侧为Efield。<br><br><br><br><img alt="2016626171713978.png (148×277)" src="//img.jbzj.com/file_images/article/201606/2016626171713978.png&#63;2016526171725"><img alt="2016626171743777.png (147×280)" src="//img.jbzj.com/file_images/article/201606/2016626171743777.png&#63;2016526171754"></p><br></div><br><p><strong>三、文件写入（慎重，小心别清空原本的文件）<br><br></strong>步骤：打开 – 写入 – （保存）关闭<br><br>直接的写入数据是不行的，因为默认打开的是’r’ 只读模式</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f.write(‘hello boy’)<br>Traceback (most recent call last):<br>File “&lt;stdin&gt;”, line 1, in &lt;module&gt;<br>IOError: File not open for writing<br>&gt;&gt;&gt; f<br>&lt;open file ‘/tmp/test.txt’, mode ‘r’ at 0x7fe550a49d20&gt;<br></pre><br></div><br><p>&nbsp;应该先指定可写的模式</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f1 = open(‘/tmp/test.txt’,’w’)<br>&gt;&gt;&gt; f1.write(‘hello boy!’)<br></pre><br></div><br><p>但此时数据只写到了缓存中，并未保存到文件，而且从下面的输出可以看到，原先里面的配置被清空了</p><br><div class="jb51code"><br><pre class="brush:py;"><br>[root@node1 ~]# cat /tmp/test.txt<br>[root@node1 ~]#<br></pre><br></div><br><p>关闭这个文件即可将缓存中的数据写入到文件中</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f1.close()<br>[root@node1 ~]# cat /tmp/test.txt<br>[root@node1 ~]# hello boy!<br></pre><br></div><br><p>注意：这一步需要相当慎重，因为如果编辑的文件存在的话，这一步操作会先清空这个文件再重新写入。那么如果不要清空文件再写入该如何做呢？<br><br>使用r+ 模式不会先清空，但是会替换掉原先的文件，如下面的例子：hello boy! 被替换成hello aay!</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f2 = open(‘/tmp/test.txt’,’r+’)<br>&gt;&gt;&gt; f2.write(‘\nhello aa!’)<br>&gt;&gt;&gt; f2.close()<br>[root@node1 python]# cat /tmp/test.txt<br>hello aay!<br></pre><br></div><br><p>如何实现不替换？</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f2 = open(‘/tmp/test.txt’,’r+’)<br>&gt;&gt;&gt; f2.read()<br>‘hello girl!’<br>&gt;&gt;&gt; f2.write(‘\nhello boy!’)<br>&gt;&gt;&gt; f2.close()<br>[root@node1 python]# cat /tmp/test.txt<br>hello girl!<br>hello boy!<br></pre><br></div><br><p>可以看到，如果在写之前先读取一下文件，再进行写入，则写入的数据会添加到文件末尾而不会替换掉原先的文件。这是因为指针引起的，r+ 模式的指针默认是在文件的开头，如果直接写入，则会覆盖源文件，通过read() 读取文件后，指针会移到文件的末尾，再写入数据就不会有问题了。这里也可以使用a 模式</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’,’a’)<br>&gt;&gt;&gt; f.write(‘\nhello man!’)<br>&gt;&gt;&gt; f.close()<br>&gt;&gt;&gt;<br>[root@node1 python]# cat /tmp/test.txt<br>hello girl!<br>hello boy!<br>hello man!<br></pre><br></div><br><p>关于其他模式的介绍，见下表：<br><br></p><br><p><img alt="2016626170852899.png (713×317)" src="//img.jbzj.com/file_images/article/201606/2016626170852899.png&#63;20165261792"></p><br><p>文件对象的方法：<br><br>f.readline()&nbsp;&nbsp; 逐行读取数据<br><br>方法一：</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’)<br>&gt;&gt;&gt; f.readline()<br>‘hello girl!\n’<br>&gt;&gt;&gt; f.readline()<br>‘hello boy!\n’<br>&gt;&gt;&gt; f.readline()<br>‘hello man!’<br>&gt;&gt;&gt; f.readline()<br>‘’<br></pre><br></div><br><p>方法二：</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; for i in open(‘/tmp/test.txt’):<br>…   print i<br>…<br>hello girl!<br>hello boy!<br>hello man!<br>f.readlines()   将文件内容以列表的形式存放<br><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’)<br>&gt;&gt;&gt; f.readlines()<br>[‘hello girl!\n’, ‘hello boy!\n’, ‘hello man!’]<br>&gt;&gt;&gt; f.close()<br><br></pre><br></div><br><p>f.next()&nbsp;&nbsp; 逐行读取数据，和f.readline() 相似，唯一不同的是，f.readline() 读取到最后如果没有数据会返回空，而f.next() 没读取到数据则会报错</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’)<br>&gt;&gt;&gt; f.readlines()<br>[‘hello girl!\n’, ‘hello boy!\n’, ‘hello man!’]<br>&gt;&gt;&gt; f.close()<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’)<br>&gt;&gt;&gt; f.next()<br>‘hello girl!\n’<br>&gt;&gt;&gt; f.next()<br>‘hello boy!\n’<br>&gt;&gt;&gt; f.next()<br>‘hello man!’<br>&gt;&gt;&gt; f.next()<br>Traceback (most recent call last):<br>File “&lt;stdin&gt;”, line 1, in &lt;module&gt;<br>StopIteration<br></pre><br></div><br><p>f.writelines()&nbsp;&nbsp; 多行写入</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; l = [‘\nhello dear!’,’\nhello son!’,’\nhello baby!\n’]<br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’,’a’)<br>&gt;&gt;&gt; f.writelines(l)<br>&gt;&gt;&gt; f.close()<br>[root@node1 python]# cat /tmp/test.txt<br>hello girl!<br>hello boy!<br>hello man!<br>hello dear!<br>hello son!<br>hello baby!<br></pre><br></div><br><p>f.seek(偏移量，选项)</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’,’r+’)<br>&gt;&gt;&gt; f.readline()<br>‘hello girl!\n’<br>&gt;&gt;&gt; f.readline()<br>‘hello boy!\n’<br>&gt;&gt;&gt; f.readline()<br>‘hello man!\n’<br>&gt;&gt;&gt; f.readline()<br>‘ ‘<br>&gt;&gt;&gt; f.close()<br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’,’r+’)<br>&gt;&gt;&gt; f.read()<br>‘hello girl!\nhello boy!\nhello man!\n’<br>&gt;&gt;&gt; f.readline()<br>‘’<br>&gt;&gt;&gt; f.close()<br></pre><br></div><br><p>这个例子可以充分的解释前面使用r+这个模式的时候，为什么需要执行f.read()之后才能正常插入<br><br>f.seek(偏移量，选项)<br><br>（1）选项=0，表示将文件指针指向从文件头部到“偏移量”字节处<br><br>（2）选项=1，表示将文件指针指向从文件的当前位置，向后移动“偏移量”字节<br><br>（3）选项=2，表示将文件指针指向从文件的尾部，向前移动“偏移量”字节</p><br><p>偏移量：正数表示向右偏移，负数表示向左偏移</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’,’r+’)<br>&gt;&gt;&gt; f.seek(0,2)<br>&gt;&gt;&gt; f.readline()<br>‘’<br>&gt;&gt;&gt; f.seek(0,0)<br>&gt;&gt;&gt; f.readline()<br>‘hello girl!\n’<br>&gt;&gt;&gt; f.readline()<br>‘hello boy!\n’<br>&gt;&gt;&gt; f.readline()<br>‘hello man!\n’<br>&gt;&gt;&gt; f.readline()<br>‘’<br></pre><br></div><br><p>f.flush()&nbsp;&nbsp;&nbsp; 将修改写入到文件中（无需关闭文件）</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f.write(‘hello python!’)<br>&gt;&gt;&gt; f.flush()<br></pre><br></div><br><div class="jb51code"><br><pre class="brush:bash;"><br>[root@node1 python]# cat /tmp/test.txt<br></pre><br></div><br><div class="jb51code"><br><pre class="brush:plain;"><br>hello girl!<br>hello boy!<br>hello man!<br>hello python!<br></pre><br></div><br><p>f.tell()&nbsp;&nbsp; 获取指针位置</p><br><div class="jb51code"><br><pre class="brush:py;"><br>&gt;&gt;&gt; f = open(‘/tmp/test.txt’)<br>&gt;&gt;&gt; f.readline()<br>‘hello girl!\n’<br>&gt;&gt;&gt; f.tell()<br>12<br>&gt;&gt;&gt; f.readline()<br>‘hello boy!\n’<br>&gt;&gt;&gt; f.tell()<br>23<br><br></pre><br></div><br><p><strong>四、内容查找和替换<br><br>1、内容查找<br><br></strong>实例：统计文件中hello个数<br><br>思路：打开文件，遍历文件内容，通过正则表达式匹配关键字，统计匹配个数。</p><br><div class="jb51code"><br><pre class="brush:bash;"><br>[root@node1 ~]# cat /tmp/test.txt</pre><br></div><br><p><br><br></p><br><div class="jb51code"><br><pre class="brush:plain;"><br>hello girl!<br>hello boy!<br>hello man!<br>hello python!<br></pre><br></div><br><p>脚本如下：<br><br>方法一：</p><br><div class="jb51code"><br><pre class="brush:py;"><br>#!/usr/bin/python<br>import re<br>f = open(‘/tmp/test.txt’)<br>source = f.read()<br>f.close()<br>r = r’hello’<br>s = len(re.findall(r,source))<br>print s<br>[root@node1 python]# python count.py<br>4<br></pre><br></div><br><p>方法二：</p><br><div class="jb51code"><br><pre class="brush:py;"><br>#!/usr/bin/python<br>import re<br>fp = file(“/tmp/test.txt”,’r’)<br>count = 0<br>for s in fp.readlines():<br>li = re.findall(“hello”,s)<br>if len(li)&gt;0:<br>count = count + len(li)<br>print “Search”,count, “hello”<br>fp.close()<br>[root@node1 python]# python count1.py<br>Search 4 hello<br><br></pre><br></div><br><p><strong>2、替换<br><br></strong>实例：把test.txt 中的hello全部换为”hi”，并把结果保存到myhello.txt中。</p><br><div class="jb51code"><br><pre class="brush:py;"><br>#!/usr/bin/python<br>import re<br>f1 = open(‘/tmp/test.txt’)<br>f2 = open(‘/tmp/myhello.txt’,’r+’)<br>for s in f1.readlines():<br>f2.write(s.replace(‘hello’,’hi’))<br>f1.close()<br>f2.close()<br>[root@node1 python]# touch /tmp/myhello.txt<br>[root@node1 ~]# cat /tmp/myhello.txt<br>hi girl!<br>hi boy!<br>hi man!<br>hi python!<br></pre><br></div><br><p>实例：读取文件test.txt内容，去除空行和注释行后，以行为单位进行排序，并将结果输出为result.txt。test.txt 的内容如下所示：<br><br></p><br><div class="jb51code"><br><pre class="brush:plain;"><br>#some words<br><br>Sometimes in life,<br>You find a special friend;<br>Someone who changes your life just by being part of it.<br>Someone who makes you laugh until you can’t stop;<br>Someone who makes you believe that there really is good in the world.<br>Someone who convinces you that there really is an unlocked door just waiting for you to open it.<br>This is Forever Friendship.<br>when you’re down,<br>and the world seems dark and empty,<br>Your forever friend lifts you up in spirits and makes that dark and empty world<br>suddenly seem bright and full.<br>Your forever friend gets you through the hard times,the sad times,and the confused times.<br>If you turn and walk away,<br>Your forever friend follows,<br>If you lose you way,<br>Your forever friend guides you and cheers you on.<br>Your forever friend holds your hand and tells you that everything is going to be okay.<br><br></pre><br></div><br><p>脚本如下：</p><br><div class="jb51code"><br><pre class="brush:py;"><br>f = open(‘cdays-4-test.txt’)<br>result = list()<br>for line in f.readlines():                # 逐行读取数据<br>line = line.strip()                #去掉每行头尾空白<br>if not len(line) or line.startswith(‘#’):   # 判断是否是空行或注释行<br>continue                  #是的话，跳过不处理<br>result.append(line)              #保存<br>result.sort()                       #排序结果<br>print result<br>open(‘cdays-4-result.txt’,’w’).write(‘%s’ % ‘\n’.join(result))        #保存入结果文件<br><br></pre><br></div>
-</div>
+          <p></p><h1>hexo-admin后台管理博客</h1><p></p>
+<p></p><h2>需求</h2><p></p>
+<p>像Hexo这种静态博客用起来很方便，但是硬伤就是没有后台管理，每次想写博客或者说想要修改原博客的话，都需要在本机上找markdown文件，修改之后发布，尤其是如果机器上没有安装hexo,git等工具的时候，就无法修改了。因此hexo可不可以以像wp,ghost这种有后台管理, 随时随地编辑博客呢?</p><br><p>正巧hexo专门有一个插件<a href="https://jaredforsyth.com/hexo-admin/" target="_blank" rel="noopener">hexo-admin</a> 提供了在web UI下增删改查博客的功能，我也正好有一个VPS, 于是就有了下面的一种方法.</p><br><h2>解决方法</h2><br><p>首先说一下条件与需求。 我自己有一个的VPS，本来是可以直接将hexo部署到VPS的，但是考虑到自己维护的VPS的稳定性等问题，最后决定将hexo的静态页面部署github-pages上。 </p><br><p>我的目的有两个:</p><br><ul><br><li><p>拥有在线编辑博客的后台</p></li><br><li><p>本地机器同时也可以编辑发布博客</p></li><br><li><p>二者需要保持同步</p></li><br></ul><br><p>基于这样的需求，仅仅靠github pages显然不可行了,必须借助VPS了.保持同步的意思是VPS的内容与本地机器上的博客的资源要保持一致。就是说我在线修改了某篇博客，然后之后如果可以很简单的同步到本地，使得两端保持同步，反过来一样。</p><br><p>我的做法是:</p><br><ul><br><li><p>将hexo目录下的相关文件包括_config.yml,source/等文件建立一个私人repo(个人使用coding.net)</p></li><br><li><p>VPS上安装好hexo,具体过程与换台机器安装同理, 可参考这篇博客<a href="http://shomy.top/2017/01/27/hexo-migrate-solution/" target="_blank" rel="noopener">hexo迁移重装</a>。</p></li><br><li><p>VPS上安装hexo-admin插件，这样可以在线编辑了. 在这一步的时候, 为了方便,我用了一个子域名以及在VPS上用nginx做前段端口转发.</p></li><br></ul><br><p>到这里后台管理基本没有问题了. 接下来就是在线发布了. 正巧的是hexo-admin提供了这个功能, 有一个Deploy的功能,具体实现是使用nodejs的<code>spawn</code>函数来执行发布脚本的. 一开始不太懂<code>spawn</code>这个函数的使用, 就直接在deploy中随便输入了东西,结果各种 spawn err.  后来查过资料,才知道deploy的输入的位置其实是对<code>hexo-admin</code>的配置里面<code>deployCommand</code>的选项,可以为空. 打个比方,如果我在<code>deployCommand</code>写的是<code>./hexo-deploy</code>, 然后点击deploy按钮之后, 后台就可以执行<code>hexo-deploy</code>脚本的内容了. 有了这个接口就非常灵活了. 因为基于此, 我们不但来发布博客,甚至可以把同步的脚本加进去.具体参考 <a href="https://github.com/jaredly/hexo-admin/issues/70" target="_blank" rel="noopener">https://github.com/jaredly/he…</a></p><br><p>下面说一下发布以及同步的操作:</p><br><ul><br><li><p>在博客目录写一个有关git同步的小脚本:<code>server-upload.sh</code> 用来同步VPS目录下的变化，主要代码其实就是先<code>git pull</code> 拉取repo最新, 之后在push. 具体脚本代码不再赘述.</p></li><br><li><br><p>建一个<code>hexo-deploy</code>的脚本,内容:</p><br><pre><code>hexo g &amp;&amp; hexo d<br>./server-upload.sh</code></pre><br></li><br><li><br><p>利用hexo-admin的deploy功能，可以在线发布，注意修改<code>_config.yml</code>: 加上hexo-admin的admin选项, 加一个<code>deployCommand: ./hexo-deploy</code>的字段,如下:</p><br><pre><code>admin:<br>    username: XXX<br>    password: XXXXX<br>    deployCommand: ‘./hexo-deploy’</code></pre><br></li><br><li><p>编辑完博客时候，发布的时候，需要点击hexo-admin的deploy。这样在后台就可以执行前面定义的<code>hexo-deloy</code>脚本了</p></li><br><li><p>本地机器也需要有一个<code>upload.sh</code>的脚本, 每次同样需要先git pull 在git push 到私人repo. 其实就是版本控制那一套.</p></li><br></ul><br><p>到现在基本完成了自己可以随时随地编辑博客并且多端同步的需求了. 之前也考虑过CI持续集成,但是大部分都是再建立一个分支, 需要把博客的source公开, 不太合适. 所以就选择了hexo-admin这种方法. </p><br><p>这篇博客便是在线完成的.<br><span class="img-wrap"><img src="http://img.suoniao.com/FoDI1IJf8tExRQSwWdw2mHXbfkzg"></span></p><br><p>其实这里面的坑还是蛮多的(主要不熟悉node). 此外开始使用supervisor做后台运行监控, 结果不知为何, 在<code>hexo d</code>包括git的pull或者push等操作,都会报错,提示让我确认git用户, 但是我已经设置了<code>git config</code>的email和name. 查了很多资料也没有解决, 后来直接抛弃supervisor, 直接使用<code>nohup</code>来放后台运行了.  大概是这样了, 有什么问题可以留言或者邮件.</p>
         </div>
         <!-- .entry-content -->
         <div class="single-reward">
@@ -530,15 +531,15 @@
           
             <div class="post-nepre half previous">
           
-            <a href="/2021/03/21/技术/hexo-admin后台管理博客/" rel="prev">
+            <a href="/2021/05/13/技术/动态网页数据抓取/" rel="prev">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/45.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/45.jpg">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/49.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/49.jpg">
               </div>
               <span class="label">
               Previous Post</span>
               <div class="info">
                 <h3>
-                ⛄hexo-admin后台管理博客☃</h3>
+                ⛄动态网页数据抓取☃</h3>
                 <hr>
               </div>
             </a>
@@ -548,15 +549,15 @@
           
             <div class="post-nepre half next">
           
-            <a href="/2021/03/21/技术/jsoup 获取html中body内容_python爬虫之下载盗墓笔记（bs4解析HTML）/" rel="next">
+            <a href="/2021/05/11/句子/有失望至极的句子吗？/" rel="next">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/33.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/33.jpg">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/61.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/61.jpg">
               </div>
               <span class="label">
               Next Post</span>
               <div class="info">
                 <h3>
-                ⛄jsoup 获取html中body内容_python爬虫之下载盗墓笔记（bs4解析HTML）☃</h3>
+                ⛄有失望至极的句子吗？☃</h3>
                 <hr>
               </div>
             </a>
@@ -829,7 +830,7 @@ $(document).ready(function() {
               </li>
             
               <li>
-                <a href="/tags/图集/">
+                <a href="/photos/">
                   <i class="fa fa-photo" aria-hidden="true"></i>
                   图集
                 </a>
