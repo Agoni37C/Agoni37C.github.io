@@ -1,0 +1,1071 @@
+<!-- 页面预加载 <script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  
+  <title itemprop="name">❄Kali linux 学习笔记（五十三）Web渗透——XSSer 2020.3.30 | flechazo</title>
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/lib.min.css" media="all">
+  <link rel="stylesheet" href="/css/font.css" media="all">
+  <link rel="stylesheet" href="/css/insight.css" media="all">
+  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+  <link rel="stylesheet" href="/css/zoom.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+  <script>
+  /*Initial Variables*/
+  var mashiro_option = new Object();
+  var mashiro_global = new Object();
+  mashiro_option.NProgressON = true;
+  /* 
+   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+   */
+  mashiro_option.email_domain = "";
+  mashiro_option.email_name = "";
+  mashiro_option.cookie_version_control = "";
+  mashiro_option.qzone_autocomplete = false;
+  mashiro_option.site_name = "さらflechazoその一见钟情";
+  mashiro_option.author_name = "一见钟情";
+  mashiro_option.site_url = "/about/";
+  mashiro_option.v_appId = "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz";
+  mashiro_option.v_appKey = "mgOpfzbkHYqU92CV4IDlAUHQ";
+  mashiro_option.mathjax = "0";
+  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
+  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+  // mashiro_option.float_player_on = true;
+
+  /*End of Initial Variables*/
+  </script>
+  <script type="text/javascript">
+  var bg = "https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/40.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/41.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/3.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/4.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/5.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/6.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/7.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/8.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/9.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/10.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/11.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/12.jpg".split(",");
+  var bgindex = Math.floor(Math.random()*bg.length);
+  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+    alert('朋友，IE浏览器未适配哦~');
+  }
+  </script>
+  <style type="text/css">
+  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
+  </style>
+  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+  </style>
+</head>
+</html>
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <div class="headertop filter-grid">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="/about/">
+           <!--<img src="">-->
+		   
+		   <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+		  <!--  <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">-->
+        </a>
+      </div>
+      <div class="header-info">
+        <p>Live your life with passion! With some drive!</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+          
+            
+              
+                <li>
+                  <a href="http://github.com/Agoni37C" target="_blank" class="social-github" title="github">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/github.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="sina">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/sina.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://music.163.com/#/my/m/music/playlist?id=572492190" target="_blank" class="social-github" title="wangyiyun">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wangyiyun.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://www.zhihu.com/people/xpwo-pei?is_all=1" target="_blank" class="social-github" title="zhihu">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/zhihu.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="email">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/email.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChat.jpg">
+                  </div>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatHao.jpg">
+                  </div>
+                </li>
+              
+            
+          
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <div id="video-container" style="">
+    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
+    </video>
+    <div id="video-btn" class="loadvideo videolive">
+    </div>
+    <div id="video-add">
+    </div>
+    <div class="video-stu">
+    </div>
+  </div>
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true">
+      </i>
+    </span>
+  </div>
+</div>
+    <div id="page" class="site wrapper">
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">さらflechazoその</span>
+            <span class="shironeko">一见钟情</span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search">
+      </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1">
+      </div>
+      <div class="line line2">
+      </div>
+      <div class="line line3">
+      </div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <ul id="menu-new" class="menu">
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+                    首页
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+                    归档
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/categories/技术/">
+                          <i class="fa fa-code" aria-hidden="true"></i>
+                          技术
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/生活/">
+                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                          生活
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://www.yutu.cn/popsoft_1_2.html">
+                          <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                          资源
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/随想/">
+                          <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                          随想
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/转载/">
+                          <i class="fa fa-book" aria-hidden="true"></i>
+                          转载
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    清单
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/tags/美文/">
+                          <i class="fa fa-gift" aria-hidden="true"></i>
+                          美文
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/music/">
+                          <i class="fa fa-headphones" aria-hidden="true"></i>
+                          歌单
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/photos/">
+                          <i class="fa fa-photo" aria-hidden="true"></i>
+                          图集
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/bangumi/">
+                          <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                          番组
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/视频/">
+                          <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                          视频
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/收藏/">
+                          <i class="fa fa-laptop" aria-hidden="true"></i>
+                          收藏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/star/">
+                          <i class="fa fa-gratipay" aria-hidden="true"></i>
+                          追星
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/drama/">
+                          <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                          追剧
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="/tags/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-tag" aria-hidden="true"></i>
+                    标签
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/categories/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-bookmark" aria-hidden="true"></i>
+                    分类
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/comment/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+                    留言板
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+                    关于
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/about/">
+                          <i class="fa fa-meetup" aria-hidden="true"></i>
+                          我？
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/theme-sakura/">
+                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                          主题
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/donate/">
+                          <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                          赞赏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/links/">
+                          <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                          友人
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          Lab
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/log in/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          login
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    杂
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          网站
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/site muban/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          模板
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/atom.xml">
+                          <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                          RSS
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/23.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/23.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      ❄Kali linux 学习笔记（五十三）Web渗透——XSSer 2020.3.30</h1>
+      <p class="entry-census">
+        <span>
+          <a href="">
+            <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="">flechazo</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2021-3-21<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <article class="baidu_pl"><br>        <div id="article_content" class="article_content clearfix"><br>        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css"><br>                <div id="content_views" class="markdown_views prism-atom-one-light"><br>                    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><br/>                        <path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"/><br/>                    </svg><br>                    <h1><a name="t0"></a><a name="t0"></a><a id="_0"></a>前言</h1><br><p>本节学习XSSer<br> 一个用来实施XSS的工具</p><br><h2><a name="t1"></a><a name="t1"></a><a id="1XSSer_4"></a>1、XSSer简介</h2><br><p>支持命令行和GUI<br> 绕过服务器端输入筛选</p><br><p>启动</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">xsser <span class="token comment">#命令行启动</span><br>xsser –gtk <span class="token comment">#GUI界面</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style><li style="color: rgb(153, 153, 153);">1</li></ul><br><p>-u<br> 指定 URL</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">xsser -u <span class="token string">“<a href="http://192.168.1.102/dvwa/vulnerabilities/&quot;" target="_blank" rel="noopener">http://192.168.1.102/dvwa/vulnerabilities/&quot;</a></span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style></ul><br><p>-g<br> GET 请求时使用，内容是当前页面的本层路径</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">-g <span class="token string">“xss_r/?name=”</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style></ul><br><p>-p<br> POST 请求时使用</p><br><p>-s<br> 统计多少次请求</p><br><p>–reverse-check<br> 测试用例</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">xsser -u <span class="token string">“<a href="http://192.168.1.102/dvwa/vulnerabilities/&quot;" target="_blank" rel="noopener">http://192.168.1.102/dvwa/vulnerabilities/&quot;</a></span> -g <span class="token string">“xss_r/?name=”</span> –cookie<span class="token operator">=</span><span class="token string">“security=low; PHPSESSID=f258647d71bed83d9aa022b4e9fc3a36”</span> -s -v –reverse-check<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style></ul><br><p>–heuristic<br> 检查被过滤的参数<br> 作用是验证过滤了哪些字符，而不是有无漏洞</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">xsser -u <span class="token string">“<a href="http://192.168.1.102/dvwa/vulnerabilities/&quot;" target="_blank" rel="noopener">http://192.168.1.102/dvwa/vulnerabilities/&quot;</a></span> -g <span class="token string">“xss_r/?name=”</span> –cookie<span class="token operator">=</span><span class="token string">“security=low; PHPSESSID=f258647d71bed83d9aa022b4e9fc3a36”</span> -s -v –heuristic<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style></ul><br><p>dvwa High 安全级别下：</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment"># 多次进行编码</span><br>xsser -u <span class="token string">“<a href="http://192.168.1.102/dvwa/vulnerabilities/&quot;" target="_blank" rel="noopener">http://192.168.1.102/dvwa/vulnerabilities/&quot;</a></span> -g <span class="token string">“xss_r/?name=”</span> –cookie<span class="token operator">=</span><span class="token string">“security=high; PHPSESSID=f258647d71bed83d9aa022b4e9fc3a36”</span> –Cem<span class="token operator">=</span><span class="token string">‘Mix,Une,Str,Hex’</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style><li style="color: rgb(153, 153, 153);">1</li></ul><br><h2><a name="t2"></a><a name="t2"></a><a id="2_54"></a>2、编码</h2><br><p>对 payload 编码，绕过服务器端筛选过滤</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><em>Select Bypasser<span class="token punctuation">(</span>s<span class="token punctuation">)</span></em>:<br>    These options can be used to encode vector<span class="token punctuation">(</span>s<span class="token punctuation">)</span> and try to bypass<br>    possible anti-XSS filters. They can be combined with other techniques:<br>    –Str               Use method String.FromCharCode<span class="token punctuation">(</span><span class="token punctuation">)</span><br>    –Une               Use Unescape<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">function</span><br>    –Mix               Mix String.FromCharCode<span class="token punctuation">(</span><span class="token punctuation">)</span> and Unescape<span class="token punctuation">(</span><span class="token punctuation">)</span><br>    –Dec               Use Decimal encoding<br>    –Hex               Use Hexadecimal encoding<br>    –Hes               Use Hexadecimal encoding with semicolons<br>    –Dwo               Encode IP addresses with DWORD<br>    –Doo               Encode IP addresses with Octal<br>    –Cem<span class="token operator">=</span>CEM           Set different <span class="token string">‘Character Encoding Mutations’</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li></ul><br><p>复用编码</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token punctuation">(</span>reversing obfuscators<span class="token punctuation">)</span> <span class="token punctuation">(</span>ex: <span class="token string">‘Mix,Une,Str,Hex’</span><span class="token punctuation">)</span><br><br>Options:<br>  –version             show program<span class="token string">‘s version number and exit<br>  -h, –help            show this help message and exit<br>  -s, –statistics      show advanced statistics output results<br>  -v, –verbose         active verbose mode output results<br>  –gtk                 launch XSSer GTK Interface<br>  –wizard              start Wizard Helper!<br><br> <em>Special Features</em>:<br>    You can set Vector(s) and Bypasser(s) to build complex scripts for XSS<br>    code embedded. XST allows you to discover if target is vulnerable to<br>    ‘</span>Cross Site Tracing<span class="token string">‘ [CAPEC-107]:<br><br>    –imx=IMX           IMX - Create an image with XSS (–imx image.png)<br>    –fla=FLASH         FLA - Create a flash movie with XSS (–fla movie.swf)<br>    –xst=XST           XST - Cross Site Tracing (–xst http(s)://host.com)<br><br> <em>Select Target(s)</em>:<br>    At least one of these options must to be specified to set the source<br>    to get target(s) urls from:<br><br>    –all=TARGET        Automatically audit an entire target<br>    -u URL, –url=URL   Enter target to audit<br>    -i READFILE         Read target(s) urls from file<br>    -d DORK             Search target(s) using a query (ex: ‘</span>news.php?id<span class="token operator">=</span><span class="token string">‘)<br>    -l                  Search from a list of ‘</span>dorks<span class="token string">‘<br>    –De=DORK_ENGINE    Use this search engine (default: duck)<br>    –Da                Search massively using all search engines<br><br> <em>Select type of HTTP/HTTPS Connection(s)</em>:<br>    These options can be used to specify which parameter(s) we want to use<br>    as payload(s) to inject:<br><br>    -g GETDATA          Send payload using GET (ex: ‘</span>/menu.php?q<span class="token operator">=</span><span class="token string">‘)<br>    -p POSTDATA         Send payload using POST (ex: ‘</span>foo<span class="token operator">=</span>1<span class="token operator">&amp;</span>bar<span class="token operator">=</span><span class="token string">‘)<br>    -c CRAWLING         Number of urls to crawl on target(s): 1-99999<br>    –Cw=CRAWLER_WIDTH  Deeping level of crawler: 1-5 (default 3)<br>    –Cl                Crawl only local target(s) urls (default TRUE)<br><br>  <em>Configure Request(s)</em>:<br>    These options can be used to specify how to connect to the target(s)<br>    payload(s). You can choose multiple:<br><br>    –cookie=COOKIE     Change your HTTP Cookie header<br>    –drop-cookie       Ignore Set-Cookie header from response<br>    –user-agent=AGENT  Change your HTTP User-Agent header (default SPOOFED)<br>    –referer=REFERER   Use another HTTP Referer header (default NONE)<br>    –xforw             Set your HTTP X-Forwarded-For with random IP values<br>    –xclient           Set your HTTP X-Client-IP with random IP values<br>    –headers=HEADERS   Extra HTTP headers newline separated<br>    –auth-type=ATYPE   HTTP Authentication type (Basic, Digest, GSS or NTLM)<br>    –auth-cred=ACRED   HTTP Authentication credentials (name:password)<br>    –proxy=PROXY       Use proxy server (tor: <a href="http://localhost:8118" target="_blank" rel="noopener">http://localhost:8118</a>)<br>    –ignore-proxy      Ignore system default HTTP proxy<br>    –timeout=TIMEOUT   Select your timeout (default 30)<br>    –retries=RETRIES   Retries when the connection timeouts (default 1)<br>    –threads=THREADS   Maximum number of concurrent HTTP requests (default 5)<br>    –delay=DELAY       Delay in seconds between each HTTP request (default 0)<br>    –tcp-nodelay       Use the TCP_NODELAY option<br>    –follow-redirects  Follow server redirection responses (302)<br>    –follow-limit=FLI  Set limit for redirection requests (default 50)<br><br>  <em>Checker Systems</em>:<br>    These options are useful to know if your target is using filters<br>    against XSS attacks:<br><br>    –hash              send a hash to check if target is repeating content<br>    –heuristic         discover parameters filtered by using heuristics<br>    –discode=DISCODE   set code on reply to discard an injection<br>    –checkaturl=ALT    check reply using: alternative url -&gt; Blind XSS<br>    –checkmethod=ALTM  check reply using: GET or POST (default: GET)<br>    –checkatdata=ALD   check reply using: alternative payload<br>    –reverse-check     establish a reverse connection from target to XSSer to<br>                        certify that is 100% vulnerable (recommended!)<br><br>  <em>Select Vector(s)</em>:<br>    These options can be used to specify injection(s) code. Important if<br>    you don’</span>t want to inject a common XSS vector used by default. Choose<br>    only one option:<br><br>    –payload<span class="token operator">=</span>SCRIPT    OWN  - Inject your own code<br>    –auto              AUTO - Inject a list of vectors provided by XSSer<br><br>  <em>Anti-antiXSS Firewall rules</em>:<br>    These options can be used to try to bypass specific WAF/IDS products.<br>    Choose only <span class="token keyword">if</span> required:<br><br>    –Phpids0.6.5       PHPIDS <span class="token punctuation">(</span>0.6.5<span class="token punctuation">)</span> <span class="token punctuation">[</span>ALL<span class="token punctuation">]</span><br>    –Phpids0.7         PHPIDS <span class="token punctuation">(</span>0.7<span class="token punctuation">)</span> <span class="token punctuation">[</span>ALL<span class="token punctuation">]</span><br>    –Imperva           Imperva Incapsula <span class="token punctuation">[</span>ALL<span class="token punctuation">]</span><br>    –Webknight         WebKnight <span class="token punctuation">(</span>4.1<span class="token punctuation">)</span> <span class="token punctuation">[</span>Chrome<span class="token punctuation">]</span><br>    –F5bigip           F5 Big IP <span class="token punctuation">[</span>Chrome + FF + Opera<span class="token punctuation">]</span><br>    –Barracuda         Barracuda WAF <span class="token punctuation">[</span>ALL<span class="token punctuation">]</span><br>    –Modsec            Mod-Security <span class="token punctuation">[</span>ALL<span class="token punctuation">]</span><br>    –Quickdefense      QuickDefense <span class="token punctuation">[</span>Chrome<span class="token punctuation">]</span><br><br>  <em>Select Bypasser<span class="token punctuation">(</span>s<span class="token punctuation">)</span></em>:<br>    These options can be used to encode vector<span class="token punctuation">(</span>s<span class="token punctuation">)</span> and try to bypass<br>    possible anti-XSS filters. They can be combined with other techniques:<br><br>    –Str               Use method String.FromCharCode<span class="token punctuation">(</span><span class="token punctuation">)</span><br>    –Une               Use Unescape<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">function</span><br>    –Mix               Mix String.FromCharCode<span class="token punctuation">(</span><span class="token punctuation">)</span> and Unescape<span class="token punctuation">(</span><span class="token punctuation">)</span><br>    –Dec               Use Decimal encoding<br>    –Hex               Use Hexadecimal encoding<br>    –Hes               Use Hexadecimal encoding with semicolons<br>    –Dwo               Encode IP addresses with DWORD<br>    –Doo               Encode IP addresses with Octal<br>    –Cem<span class="token operator">=</span>CEM           Set different <span class="token string">‘Character Encoding Mutations’</span><br>                        <span class="token punctuation">(</span>reversing obfuscators<span class="token punctuation">)</span> <span class="token punctuation">(</span>ex: <span class="token string">‘Mix,Une,Str,Hex’</span><span class="token punctuation">)</span><br><br>  <em>Special Technique<span class="token punctuation">(</span>s<span class="token punctuation">)</span></em>:<br>    These options can be used to inject code using different XSS<br>    techniques. You can choose multiple:<br><br>    –Coo               COO - Cross Site Scripting Cookie injection<br>    –Xsa               XSA - Cross Site Agent Scripting<br>    –Xsr               XSR - Cross Site Referer Scripting<br>    –Dcp               DCP - Data Control Protocol injections<br>    –Dom               DOM - Document Object Model injections<br>    –Ind               IND - HTTP Response Splitting Induced code<br>    –Anchor            ANC - Use Anchor Stealth payloader <span class="token punctuation">(</span>DOM shadows<span class="token operator">!</span><span class="token punctuation">)</span><br><br>  <em>Select Final injection<span class="token punctuation">(</span>s<span class="token punctuation">)</span></em>:<br>    These options can be used to specify the final code to inject on<br>    vulnerable target<span class="token punctuation">(</span>s<span class="token punctuation">)</span>. Important <span class="token keyword">if</span> you want to exploit <span class="token string">‘on-the-wild’</span><br>    the vulnerabilities found. Choose only one option:<br><br>    –Fp<span class="token operator">=</span>FINALPAYLOAD   OWN    - Exploit your own code<br>    –Fr<span class="token operator">=</span>FINALREMOTE    REMOTE - Exploit a script -remotely-<br>    –Doss              DOSs   - XSS <span class="token punctuation">(</span>server<span class="token punctuation">)</span> Denial of Service<br>    –Dos               DOS    - XSS <span class="token punctuation">(</span>client<span class="token punctuation">)</span> Denial of Service<br>    –B64               B64    - Base64 code encoding <span class="token keyword">in</span> META tag <span class="token punctuation">(</span>rfc2397<span class="token punctuation">)</span><br><br>  <em>Special Final injection<span class="token punctuation">(</span>s<span class="token punctuation">)</span></em>:<br>    These options can be used to execute some <span class="token string">‘special’</span> injection<span class="token punctuation">(</span>s<span class="token punctuation">)</span> on<br>    vulnerable target<span class="token punctuation">(</span>s<span class="token punctuation">)</span>. You can <span class="token keyword">select</span> multiple and combine them with<br>    your final code <span class="token punctuation">(</span>except with DCP code<span class="token punctuation">)</span>:<br><br>    –Onm               ONM - Use onMouseMove<span class="token punctuation">(</span><span class="token punctuation">)</span> event<br>    –Ifr               IFR - Use <span class="token operator">&lt;</span>iframe<span class="token operator">&gt;</span> <span class="token function">source</span> tag<br><br>  <em>Reporting</em>:<br>    –save              <span class="token function">export</span> to <span class="token function">file</span> <span class="token punctuation">(</span>XSSreport.raw<span class="token punctuation">)</span><br>    –xml<span class="token operator">=</span>FILEXML       <span class="token function">export</span> to XML <span class="token punctuation">(</span>–xml file.xml<span class="token punctuation">)</span><br><br>  <em>Miscellaneous</em>:<br>    –silent            inhibit console output results<br>    –no-head           NOT send a HEAD request before start a <span class="token function">test</span><br>    –alive<span class="token operator">=</span>ISALIVE     <span class="token keyword">set</span> limit of errors before check <span class="token keyword">if</span> target is alive<br>    –update            check <span class="token keyword">for</span> latest stable version<br><br><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li><li style="color: rgb(153, 153, 153);">58</li><li style="color: rgb(153, 153, 153);">59</li><li style="color: rgb(153, 153, 153);">60</li><li style="color: rgb(153, 153, 153);">61</li><li style="color: rgb(153, 153, 153);">62</li><li style="color: rgb(153, 153, 153);">63</li><li style="color: rgb(153, 153, 153);">64</li><li style="color: rgb(153, 153, 153);">65</li><li style="color: rgb(153, 153, 153);">66</li><li style="color: rgb(153, 153, 153);">67</li><li style="color: rgb(153, 153, 153);">68</li><li style="color: rgb(153, 153, 153);">69</li><li style="color: rgb(153, 153, 153);">70</li><li style="color: rgb(153, 153, 153);">71</li><li style="color: rgb(153, 153, 153);">72</li><li style="color: rgb(153, 153, 153);">73</li><li style="color: rgb(153, 153, 153);">74</li><li style="color: rgb(153, 153, 153);">75</li><li style="color: rgb(153, 153, 153);">76</li><li style="color: rgb(153, 153, 153);">77</li><li style="color: rgb(153, 153, 153);">78</li><li style="color: rgb(153, 153, 153);">79</li><li style="color: rgb(153, 153, 153);">80</li><li style="color: rgb(153, 153, 153);">81</li><li style="color: rgb(153, 153, 153);">82</li><li style="color: rgb(153, 153, 153);">83</li><li style="color: rgb(153, 153, 153);">84</li><li style="color: rgb(153, 153, 153);">85</li><li style="color: rgb(153, 153, 153);">86</li><li style="color: rgb(153, 153, 153);">87</li><li style="color: rgb(153, 153, 153);">88</li><li style="color: rgb(153, 153, 153);">89</li><li style="color: rgb(153, 153, 153);">90</li><li style="color: rgb(153, 153, 153);">91</li><li style="color: rgb(153, 153, 153);">92</li><li style="color: rgb(153, 153, 153);">93</li><li style="color: rgb(153, 153, 153);">94</li><li style="color: rgb(153, 153, 153);">95</li><li style="color: rgb(153, 153, 153);">96</li><li style="color: rgb(153, 153, 153);">97</li><li style="color: rgb(153, 153, 153);">98</li><li style="color: rgb(153, 153, 153);">99</li><li style="color: rgb(153, 153, 153);">100</li><li style="color: rgb(153, 153, 153);">101</li><li style="color: rgb(153, 153, 153);">102</li><li style="color: rgb(153, 153, 153);">103</li><li style="color: rgb(153, 153, 153);">104</li><li style="color: rgb(153, 153, 153);">105</li><li style="color: rgb(153, 153, 153);">106</li><li style="color: rgb(153, 153, 153);">107</li><li style="color: rgb(153, 153, 153);">108</li><li style="color: rgb(153, 153, 153);">109</li><li style="color: rgb(153, 153, 153);">110</li><li style="color: rgb(153, 153, 153);">111</li><li style="color: rgb(153, 153, 153);">112</li><li style="color: rgb(153, 153, 153);">113</li><li style="color: rgb(153, 153, 153);">114</li><li style="color: rgb(153, 153, 153);">115</li><li style="color: rgb(153, 153, 153);">116</li><li style="color: rgb(153, 153, 153);">117</li><li style="color: rgb(153, 153, 153);">118</li><li style="color: rgb(153, 153, 153);">119</li><li style="color: rgb(153, 153, 153);">120</li><li style="color: rgb(153, 153, 153);">121</li><li style="color: rgb(153, 153, 153);">122</li><li style="color: rgb(153, 153, 153);">123</li><li style="color: rgb(153, 153, 153);">124</li><li style="color: rgb(153, 153, 153);">125</li><li style="color: rgb(153, 153, 153);">126</li><li style="color: rgb(153, 153, 153);">127</li><li style="color: rgb(153, 153, 153);">128</li><li style="color: rgb(153, 153, 153);">129</li><li style="color: rgb(153, 153, 153);">130</li><li style="color: rgb(153, 153, 153);">131</li><li style="color: rgb(153, 153, 153);">132</li><li style="color: rgb(153, 153, 153);">133</li><li style="color: rgb(153, 153, 153);">134</li><li style="color: rgb(153, 153, 153);">135</li><li style="color: rgb(153, 153, 153);">136</li><li style="color: rgb(153, 153, 153);">137</li><li style="color: rgb(153, 153, 153);">138</li><li style="color: rgb(153, 153, 153);">139</li><li style="color: rgb(153, 153, 153);">140</li><li style="color: rgb(153, 153, 153);">141</li><li style="color: rgb(153, 153, 153);">142</li><li style="color: rgb(153, 153, 153);">143</li><li style="color: rgb(153, 153, 153);">144</li><li style="color: rgb(153, 153, 153);">145</li><li style="color: rgb(153, 153, 153);">146</li><li style="color: rgb(153, 153, 153);">147</li><li style="color: rgb(153, 153, 153);">148</li><li style="color: rgb(153, 153, 153);">149</li><li style="color: rgb(153, 153, 153);">150</li><li style="color: rgb(153, 153, 153);">151</li><li style="color: rgb(153, 153, 153);">152</li><li style="color: rgb(153, 153, 153);">153</li><li style="color: rgb(153, 153, 153);">154</li></ul><br>                </div><div data-report-view="{"mod":"1585297308_001","dest":"https://fishpond.blog.csdn.net/article/details/105199923","extend1":"pc","ab":"new"}"><div></div></div><br>                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/markdown_views-d7a94ec6ab.css" rel="stylesheet"><br>                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/style-f1c5feb645.css" rel="stylesheet"><br>        </div><br>    </article>
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatpay.jpg"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2021/03/21/kali集合/kali第50个/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/23.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/23.jpg">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                ❄Kali linux 学习笔记（五十）Web渗透——sql盲注 2020.3.26</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2021/03/21/kali集合/kali第55个/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/23.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/23.jpg">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                ❄Kali linux 学习笔记（五十五）Web渗透——CSRF 2020.3.31</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz",
+        appKey: "mgOpfzbkHYqU92CV4IDlAUHQ",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg" itemprop="image" alt="flechazo" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="" itemprop="url" rel="author">flechazo</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div>    
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            // PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 flechazo<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy 2021不闻星河须臾固执走向你</p>
+    </div>
+    <div class="footer-device">
+    <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;">Theme <a href="https://github.com/honjun/hexo-theme-sakura" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a>&<a href="https://www.i-flechazo-y.top/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">flechazo</a>, Powered by Flechazo, Hosted by Coding Pages</a>
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<script src="/js/botui.js"></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+/* <![CDATA[ */
+if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+} else {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+}
+/* ]]> */
+
+</script>
+<script>
+$(document).ready(function() {
+  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+    if ($(".pattern-center").length > 0) { //有图的情况
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+      });
+    } else {
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+      });
+    }
+    var offsetTop = $('.toc').offset().top - 95;
+    window.onscroll = function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop >= offsetTop) {
+        $('.toc').addClass('toc-fixed');
+      } else {
+        $('.toc').removeClass('toc-fixed');
+      }
+    }
+  }
+});
+</script>
+
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">さらflechazoその一见钟情</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="http://github.com/Agoni37C" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="http://weibo.com/mashirozx?is_all=1" class="fa fa-weibo" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=954655431&site=qq&menu=yes" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/categories/技术/">
+                  <i class="fa fa-code" aria-hidden="true"></i>
+                  技术
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/生活/">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                  生活
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://www.yutu.cn/popsoft_1_2.html">
+                  <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                  资源
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/随想/">
+                  <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                  随想
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/转载/">
+                  <i class="fa fa-book" aria-hidden="true"></i>
+                  转载
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            清单
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/tags/美文/">
+                  <i class="fa fa-gift" aria-hidden="true"></i>
+                  美文
+                </a>
+              </li>
+            
+              <li>
+                <a href="/music/">
+                  <i class="fa fa-headphones" aria-hidden="true"></i>
+                  歌单
+                </a>
+              </li>
+            
+              <li>
+                <a href="/photos/">
+                  <i class="fa fa-photo" aria-hidden="true"></i>
+                  图集
+                </a>
+              </li>
+            
+              <li>
+                <a href="/bangumi/">
+                  <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                  番组
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/视频/">
+                  <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                  视频
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/收藏/">
+                  <i class="fa fa-laptop" aria-hidden="true"></i>
+                  收藏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/star/">
+                  <i class="fa fa-gratipay" aria-hidden="true"></i>
+                  追星
+                </a>
+              </li>
+            
+              <li>
+                <a href="/drama/">
+                  <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                  追剧
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/tags/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-tag" aria-hidden="true"></i>
+            标签
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/categories/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-bookmark" aria-hidden="true"></i>
+            分类
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/comment/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+            留言板
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/donate/">
+                  <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                  赞赏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/links/">
+                  <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                  友人
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/log in/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  login
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            杂
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  网站
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/site muban/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  模板
+                </a>
+              </li>
+            
+              <li>
+                <a href="/atom.xml">
+                  <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                  RSS
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 hexo-sakura</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!-- require MetingJS -->
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<meting-js
+
+    id="572492190"
+
+    server="netease"
+
+    type="playlist"
+
+    fixed="true"
+
+    autoplay="false"
+
+    loop="all"
+
+    order="random"
+
+    preload="auto"
+
+    volume="0.7"
+
+    mutex="true"
+
+</meting-js>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"Live2d# 修改项 npm-module package name"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+<script src="/Live2d/autoload.js"></script>
+</html>
+<!-- 样式二（飘动的彩带） -->
+<script src="https://g.joyinshare.com/hc/piao.js" type="text/javascript"></script>
+<!-- 樱花飘落特效 -->
+<script src="https://cdn.jsdelivr.net/gh/wallleap/cdn/js/sakura.js"></script>
