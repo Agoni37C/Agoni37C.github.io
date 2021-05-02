@@ -1,0 +1,1071 @@
+<!-- 页面预加载 <script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  
+  <title itemprop="name">❄Kali linux 学习笔记（四十一）Web渗透——扫描工具之w3af 2020.3.18 | flechazo</title>
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/lib.min.css" media="all">
+  <link rel="stylesheet" href="/css/font.css" media="all">
+  <link rel="stylesheet" href="/css/insight.css" media="all">
+  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+  <link rel="stylesheet" href="/css/zoom.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+  <script>
+  /*Initial Variables*/
+  var mashiro_option = new Object();
+  var mashiro_global = new Object();
+  mashiro_option.NProgressON = true;
+  /* 
+   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+   */
+  mashiro_option.email_domain = "";
+  mashiro_option.email_name = "";
+  mashiro_option.cookie_version_control = "";
+  mashiro_option.qzone_autocomplete = false;
+  mashiro_option.site_name = "さらflechazoその一见钟情";
+  mashiro_option.author_name = "一见钟情";
+  mashiro_option.site_url = "/about/";
+  mashiro_option.v_appId = "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz";
+  mashiro_option.v_appKey = "mgOpfzbkHYqU92CV4IDlAUHQ";
+  mashiro_option.mathjax = "0";
+  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
+  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+  // mashiro_option.float_player_on = true;
+
+  /*End of Initial Variables*/
+  </script>
+  <script type="text/javascript">
+  var bg = "https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/40.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/41.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/44.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/4.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/5.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/94.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/7.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/8.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/178.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/10.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/13.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/12.jpg".split(",");
+  var bgindex = Math.floor(Math.random()*bg.length);
+  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+    alert('朋友，IE浏览器未适配哦~');
+  }
+  </script>
+  <style type="text/css">
+  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
+  </style>
+  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+  </style>
+</head>
+</html>
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <div class="headertop filter-grid">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="/about/">
+           <!--<img src="">-->
+		   
+		   <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+		  <!--  <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">-->
+        </a>
+      </div>
+      <div class="header-info">
+        <p>Live your life with passion! With some drive!</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+          
+            
+              
+                <li>
+                  <a href="http://github.com/Agoni37C" target="_blank" class="social-github" title="github">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/github.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="sina">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/sina.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://music.163.com/#/my/m/music/playlist?id=572492190" target="_blank" class="social-github" title="wangyiyun">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wangyiyun.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://www.zhihu.com/people/xpwo-pei?is_all=1" target="_blank" class="social-github" title="zhihu">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/zhihu.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="email">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/email.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChat.jpg">
+                  </div>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatHao.jpg">
+                  </div>
+                </li>
+              
+            
+          
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <div id="video-container" style="">
+    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
+    </video>
+    <div id="video-btn" class="loadvideo videolive">
+    </div>
+    <div id="video-add">
+    </div>
+    <div class="video-stu">
+    </div>
+  </div>
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true">
+      </i>
+    </span>
+  </div>
+</div>
+    <div id="page" class="site wrapper">
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">さらflechazoその</span>
+            <span class="shironeko">一见钟情</span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search">
+      </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1">
+      </div>
+      <div class="line line2">
+      </div>
+      <div class="line line3">
+      </div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <ul id="menu-new" class="menu">
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+                    首页
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+                    归档
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/categories/技术/">
+                          <i class="fa fa-code" aria-hidden="true"></i>
+                          技术
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/生活/">
+                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                          生活
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://www.yutu.cn/popsoft_1_2.html">
+                          <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                          资源
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/随想/">
+                          <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                          随想
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/转载/">
+                          <i class="fa fa-book" aria-hidden="true"></i>
+                          转载
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    清单
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/tags/美文/">
+                          <i class="fa fa-gift" aria-hidden="true"></i>
+                          美文
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/music/">
+                          <i class="fa fa-headphones" aria-hidden="true"></i>
+                          歌单
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/photos/">
+                          <i class="fa fa-photo" aria-hidden="true"></i>
+                          图集
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/bangumi/">
+                          <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                          番组
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/视频/">
+                          <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                          视频
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/收藏/">
+                          <i class="fa fa-laptop" aria-hidden="true"></i>
+                          收藏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/star/">
+                          <i class="fa fa-gratipay" aria-hidden="true"></i>
+                          追星
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/drama/">
+                          <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                          追剧
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="/tags/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-tag" aria-hidden="true"></i>
+                    标签
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/categories/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-bookmark" aria-hidden="true"></i>
+                    分类
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/comment/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+                    留言板
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+                    关于
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/about/">
+                          <i class="fa fa-meetup" aria-hidden="true"></i>
+                          我？
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/theme-sakura/">
+                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                          主题
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/donate/">
+                          <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                          赞赏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/links/">
+                          <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                          友人
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          Lab
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/log in/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          login
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    杂
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          网站
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/site muban/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          模板
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/atom.xml">
+                          <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                          RSS
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/141.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/141.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      ❄Kali linux 学习笔记（四十一）Web渗透——扫描工具之w3af 2020.3.18</h1>
+      <p class="entry-census">
+        <span>
+          <a href="">
+            <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="">flechazo</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2020-3-18<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <article class="baidu_pl"><br>        <div id="article_content" class="article_content clearfix"><br>        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css"><br>                <div id="content_views" class="markdown_views prism-atom-one-light"><br>                    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><br/>                        <path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"/><br/>                    </svg><br>                    <h1><a name="t0"></a><a name="t0"></a><a id="_0"></a>前言</h1><br><p>w3af (web application attack and audit framework)</p><br><ul><li>基于python开发</li><li>发现和利用所有web应用程序漏洞</li><li>比较重量级</li></ul><br><p>功能有：</p><br><ul><li>audit（审计）：该类插件会向Crawl插件爬取出的注入点发送特制的POC数据以确认漏洞是否存在。</li><li>infrastructure（基础）：这类插件用来标识有关目标系统的信息，如安装的WAF，操作系统和HTTP守护进程等。</li><li>grep（检索）：这类插件会分析其他插件发送的HTTP请求和相应并识别漏洞。</li><li>evasion（绕过）：通过修改由其他插件生成的HTTP请求来绕过简单的入侵检测规则。</li><li>mangle：允许修改基于正则表达式的请求和响应</li><li>auth：身份认证</li><li>Mangle：允许修改基于正则表达式的请求和响应。</li><li>bruteforce：在爬取阶段进行暴力登陆</li><li>output（输出）：这类插件会将插件的数据保存到文本，xml或者是html文件中。调试的信息也会发送到输出Output插件并可保存和分析。如果启用了text_file和xml_file这两个Output插件，则这两个都会记录有Audit插件发现的任何漏洞。</li><li>crawl（爬取）：通过爬取网站站点来获得新的URL地址。如果用户启用了Crawl类型的多个插件，此时将产生一个循环： A插件在第一次运行时发现了一个新的url，w3af会将其发送到插件B。如果插件B发现一个新的url则会发送到插件A。这个过程持续进行直到所有插件都已运行且无法找到更多的新信息。</li><li>Attack（攻击）：如果Audit插件发现了漏洞，Attack将会进行攻击和利用，通常会在远程服务器上返回一个shell或者比如SQL注入则会获取数据库的数据。</li></ul><br><h2><a name="t1"></a><a name="t1"></a><a id="1_19"></a>1、安装</h2><br><p>安装可参考<br> <a href="https://blog.csdn.net/kevinhanser/article/details/78010003" target="_blank" rel="noopener">https://blog.csdn.net/kevinhanser/article/details/78010003</a><br> <a href="https://blog.csdn.net/deng_xj/article/details/87753112" target="_blank" rel="noopener">https://blog.csdn.net/deng_xj/article/details/87753112</a></p><br><h2><a name="t2"></a><a name="t2"></a><a id="2_23"></a>2、基础</h2><br><h4><a id="help_24"></a>help帮助界面</h4><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">root@attacker:~<span class="token comment"># w3afconsole </span><br>w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> start             <span class="token operator">|</span> Start the scan.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> plugins           <span class="token operator">|</span> Enable and configure plugins.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> exploit           <span class="token operator">|</span> Exploit the vulnerability.                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> profiles          <span class="token operator">|</span> List and use scan profiles.                                                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> cleanup           <span class="token operator">|</span> Cleanup before starting a new scan.                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> ————————————————- ————————————————– ——————————- <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">help</span>              <span class="token operator">|</span> Display help. Issuing: <span class="token function">help</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span> , prints <span class="token function">more</span> specific <span class="token function">help</span> about <span class="token string">“command”</span>                            <span class="token operator">|</span><br>    <span class="token operator">|</span> version           <span class="token operator">|</span> Show w3af version information.                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> keys              <span class="token operator">|</span> Display key shortcuts.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> http-settings     <span class="token operator">|</span> Configure the HTTP settings of the framework.                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> misc-settings     <span class="token operator">|</span> Configure w3af misc settings.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> target            <span class="token operator">|</span> Configure the target URL.                                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back              <span class="token operator">|</span> Go to the previous menu.                                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>              <span class="token operator">|</span> Exit w3af.                                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> kb                <span class="token operator">|</span> Browse the vulnerabilities stored <span class="token keyword">in</span> the Knowledge Base                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li></ul><br><h4><a id="plugins__50"></a>plugins 插件</h4><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> plugins<br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> list                         <span class="token operator">|</span> List available plugins.                                                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> ————————————————- ————————————————– ——————————– <span class="token operator">|</span><br>    <span class="token operator">|</span> 返回<span class="token operator">|</span> 转到上一个菜单。<span class="token operator">|</span><br>    <span class="token operator">|</span> 退出<span class="token operator">|</span> 退出w3af。<span class="token operator">|</span><br>    <span class="token operator">|</span> ————————————————- ————————————————– ——————————– <span class="token operator">|</span><br>    <span class="token operator">|</span> 回避<span class="token operator">|</span> 查看，配置和启用evasion插件<span class="token operator">|</span><br>    <span class="token operator">|</span> auth                         <span class="token operator">|</span> View, configure and <span class="token function">enable</span> auth plugins                                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">grep</span>                         <span class="token operator">|</span> View, configure and <span class="token function">enable</span> <span class="token function">grep</span> plugins                                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> audit                        <span class="token operator">|</span> View, configure and <span class="token function">enable</span> audit plugins                                                           <span class="token operator">|</span><br>    <span class="token operator">|</span> bruteforce                   <span class="token operator">|</span> View, configure and <span class="token function">enable</span> bruteforce plugins                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span> output                       <span class="token operator">|</span> View, configure and <span class="token function">enable</span> output plugins                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span> crawl                        <span class="token operator">|</span> View, configure and <span class="token function">enable</span> crawl plugins                                                           <span class="token operator">|</span><br>    <span class="token operator">|</span> infrastructure               <span class="token operator">|</span> View, configure and <span class="token function">enable</span> infrastructure plugins                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> mangle                       <span class="token operator">|</span> View, configure and <span class="token function">enable</span> mangle plugins                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————–<span class="token operator">|</span><br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> list auth<br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> Plugin name               <span class="token operator">|</span> Status        <span class="token operator">|</span> Conf      <span class="token operator">|</span> Description                                                             <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> detailed                  <span class="token operator">|</span>               <span class="token operator">|</span> Yes       <span class="token operator">|</span> Detailed authentication plugin.                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> generic                   <span class="token operator">|</span>               <span class="token operator">|</span> Yes       <span class="token operator">|</span> Generic authentication plugin.                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> list audit<br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> Plugin name         <span class="token operator">|</span> Status <span class="token operator">|</span> Conf <span class="token operator">|</span> Description                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> blind_sqli          <span class="token operator">|</span>        <span class="token operator">|</span> Yes  <span class="token operator">|</span> Identify blind SQL injection vulnerabilities.                                             <span class="token operator">|</span><br>    <span class="token operator">|</span> buffer_overflow     <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> Find buffer overflow vulnerabilities.                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> cors_origin         <span class="token operator">|</span>        <span class="token operator">|</span> Yes  <span class="token operator">|</span> Inspect <span class="token keyword">if</span> application checks that the value of the <span class="token string">“Origin”</span> HTTP header isconsistent     <span class="token operator">|</span><br>    <span class="token operator">|</span>                     <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> with the value of the remote IP address/Host of the sender ofthe incoming HTTP request.   <span class="token operator">|</span><br>    <span class="token operator">|</span> csrf                <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> Identify Cross-Site Request Forgery vulnerabilities.                                      <span class="token operator">|</span><br>    <span class="token operator">|</span> dav                 <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> Verify <span class="token keyword">if</span> the WebDAV module is properly configured.                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">eval</span>                <span class="token operator">|</span>        <span class="token operator">|</span> Yes  <span class="token operator">|</span> Find insecure eval<span class="token punctuation">(</span><span class="token punctuation">)</span> usage.                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> file_upload         <span class="token operator">|</span>        <span class="token operator">|</span> Yes  <span class="token operator">|</span> Uploads a <span class="token function">file</span> and <span class="token keyword">then</span> searches <span class="token keyword">for</span> the <span class="token function">file</span> inside all known directories.               <span class="token operator">|</span><br>    <span class="token operator">|</span> format_string       <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> Find <span class="token function">format</span> string vulnerabilities.                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> frontpage           <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> Tries to upload a <span class="token function">file</span> using frontpage extensions <span class="token punctuation">(</span>author.dll<span class="token punctuation">)</span>.                           <span class="token operator">|</span><br>    <span class="token operator">|</span> generic             <span class="token operator">|</span>        <span class="token operator">|</span> Yes  <span class="token operator">|</span> Find all kind of bugs without using a fixed error database.                               <span class="token operator">|</span><br>    <span class="token operator">|</span> global_redirect     <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> Find scripts that redirect the browser to any site.                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> htaccess_methods    <span class="token operator">|</span>        <span class="token operator">|</span>      <span class="token operator">|</span> Find misconfigurations <span class="token keyword">in</span> Apache<span class="token string">‘s “&lt;LIMIT&gt;” configuration.                               |<br>    | ldapi               |        |      | Find LDAP injection bugs.                                                                 |<br>    | lfi                 |        |      | Find local file inclusion vulnerabilities.                                                |<br>    | memcachei           |        |      | No description available for this plugin.                                                 |<br>    | mx_injection        |        |      | Find MX injection vulnerabilities.                                                        |<br>    | os_commanding       |        |      | Find OS Commanding vulnerabilities.                                                       |<br>    | phishing_vector     |        |      | Find phishing vectors.                                                                    |<br>    | preg_replace        |        |      | Find unsafe usage of PHPs preg_replace.                                                   |<br>    | redos               |        |      | Find ReDoS vulnerabilities.                                                               |<br>    | response_splitting  |        |      | Find response splitting vulnerabilities.                                                  |<br>    | rfd                 |        |      | Identify reflected file download vulnerabilities.                                         |<br>    | rfi                 |        | Yes  | Find remote file inclusion vulnerabilities.                                               |<br>    | rosetta_flash       |        |      | Find Rosetta Flash vulnerabilities in JSONP endpoints                                     |<br>    | shell_shock         |        |      | Find shell shock vulnerabilities.                                                         |<br>    | sqli                |        |      | Find SQL injection bugs.                                                                  |<br>    | ssi                 |        |      | Find server side inclusion vulnerabilities.                                               |<br>    | ssl_certificate     |        | Yes  | Check the SSL certificate validity (if https is being used).                              |<br>    | un_ssl              |        |      | Find out if secure content can also be fetched using http.                                |<br>    | websocket_hijacking |        |      | Detect Cross-Site WebSocket hijacking vulnerabilities.                                    |<br>    | xpath               |        |      | Find XPATH injection vulnerabilities.                                                     |<br>    | xss                 |        | Yes  | Identify cross site scripting vulnerabilities.                                            |<br>    | xst                 |        |      | Find Cross Site Tracing vulnerabilities.                                                  |<br>    |———————————————————————————————————————————|<br>w3af/plugins&gt;&gt;&gt; audit xss sqli lfi  #开启使用三个插件模块<br>w3af/plugins&gt;&gt;&gt; list audit #这时候的插件模块状态变为 enabled<br>    |———————————————————————————————————————————-|<br>    | Plugin name         | Status  | Conf | Description                                                                               |<br>    |———————————————————————————————————————————-|<br>    | blind_sqli          |         | Yes  | Identify blind SQL injection vulnerabilities.                                             |<br>    | buffer_overflow     |         |      | Find buffer overflow vulnerabilities.                                                     |<br>    | cors_origin         |         | Yes  | Inspect if application checks that the value of the “Origin” HTTP header isconsistent     |<br>    |                     |         |      | with the value of the remote IP address/Host of the sender ofthe incoming HTTP request.   |<br>    | csrf                |         |      | Identify Cross-Site Request Forgery vulnerabilities.                                      |<br>    | dav                 |         |      | Verify if the WebDAV module is properly configured.                                       |<br>    | eval                |         | Yes  | Find insecure eval() usage.                                                               |<br>    | file_upload         |         | Yes  | Uploads a file and then searches for the file inside all known directories.               |<br>    | format_string       |         |      | Find format string vulnerabilities.                                                       |<br>    | frontpage           |         |      | Tries to upload a file using frontpage extensions (author.dll).                           |<br>    | generic             |         | Yes  | Find all kind of bugs without using a fixed error database.                               |<br>    | global_redirect     |         |      | Find scripts that redirect the browser to any site.                                       |<br>    | htaccess_methods    |         |      | Find misconfigurations in Apache’</span>s <span class="token string">“&lt;LIMIT&gt;”</span> configuration.                               <span class="token operator">|</span><br>    <span class="token operator">|</span> ldapi               <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find LDAP injection bugs.                                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span> lfi                 <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find local <span class="token function">file</span> inclusion vulnerabilities.                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> memcachei           <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> No description available <span class="token keyword">for</span> this plugin.                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span> mx_injection        <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find MX injection vulnerabilities.                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span> os_commanding       <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find OS Commanding vulnerabilities.                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> phishing_vector     <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find phishing vectors.                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span> preg_replace        <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find unsafe usage of PHPs preg_replace.                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> redos               <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find ReDoS vulnerabilities.                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> response_splitting  <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find response splitting vulnerabilities.                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> rfd                 <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Identify reflected <span class="token function">file</span> download vulnerabilities.                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> rfi                 <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Find remote <span class="token function">file</span> inclusion vulnerabilities.                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> rosetta_flash       <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find Rosetta Flash vulnerabilities <span class="token keyword">in</span> JSONP endpoints                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> shell_shock         <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find shell shock vulnerabilities.                                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> sqli                <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find SQL injection bugs.                                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> ssi                 <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find server side inclusion vulnerabilities.                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> ssl_certificate     <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Check the SSL certificate validity <span class="token punctuation">(</span>if https is being used<span class="token punctuation">)</span>.                              <span class="token operator">|</span><br>    <span class="token operator">|</span> un_ssl              <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find out <span class="token keyword">if</span> secure content can also be fetched using http.                                <span class="token operator">|</span><br>    <span class="token operator">|</span> websocket_hijacking <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Detect Cross-Site WebSocket hijacking vulnerabilities.                                    <span class="token operator">|</span><br>    <span class="token operator">|</span> xpath               <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find XPATH injection vulnerabilities.                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> xss                 <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Identify cross site scripting vulnerabilities.                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> xst                 <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find Cross Site Tracing vulnerabilities.                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> audit all <span class="token comment">#扫描所有插件模块</span><br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> list audit<br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> Plugin name         <span class="token operator">|</span> Status  <span class="token operator">|</span> Conf <span class="token operator">|</span> Description                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> blind_sqli          <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Identify blind SQL injection vulnerabilities.                                             <span class="token operator">|</span><br>    <span class="token operator">|</span> buffer_overflow     <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find buffer overflow vulnerabilities.                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> cors_origin         <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Inspect <span class="token keyword">if</span> application checks that the value of the <span class="token string">“Origin”</span> HTTP header isconsistent     <span class="token operator">|</span><br>    <span class="token operator">|</span>                     <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> with the value of the remote IP address/Host of the sender ofthe incoming HTTP request.   <span class="token operator">|</span><br>    <span class="token operator">|</span> csrf                <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Identify Cross-Site Request Forgery vulnerabilities.                                      <span class="token operator">|</span><br>    <span class="token operator">|</span> dav                 <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Verify <span class="token keyword">if</span> the WebDAV module is properly configured.                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">eval</span>                <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Find insecure eval<span class="token punctuation">(</span><span class="token punctuation">)</span> usage.                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> file_upload         <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Uploads a <span class="token function">file</span> and <span class="token keyword">then</span> searches <span class="token keyword">for</span> the <span class="token function">file</span> inside all known directories.               <span class="token operator">|</span><br>    <span class="token operator">|</span> format_string       <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find <span class="token function">format</span> string vulnerabilities.                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> frontpage           <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Tries to upload a <span class="token function">file</span> using frontpage extensions <span class="token punctuation">(</span>author.dll<span class="token punctuation">)</span>.                           <span class="token operator">|</span><br>    <span class="token operator">|</span> generic             <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Find all kind of bugs without using a fixed error database.                               <span class="token operator">|</span><br>    <span class="token operator">|</span> global_redirect     <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find scripts that redirect the browser to any site.                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> htaccess_methods    <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find misconfigurations <span class="token keyword">in</span> Apache’s <span class="token string">“&lt;LIMIT&gt;”</span> configuration.                               <span class="token operator">|</span><br>    <span class="token operator">|</span> ldapi               <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find LDAP injection bugs.                                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span> lfi                 <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find local <span class="token function">file</span> inclusion vulnerabilities.                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> memcachei           <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> No description available <span class="token keyword">for</span> this plugin.                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span> mx_injection        <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find MX injection vulnerabilities.                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span> os_commanding       <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find OS Commanding vulnerabilities.                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> phishing_vector     <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find phishing vectors.                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span> preg_replace        <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find unsafe usage of PHPs preg_replace.                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> redos               <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find ReDoS vulnerabilities.                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> response_splitting  <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find response splitting vulnerabilities.                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> rfd                 <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Identify reflected <span class="token function">file</span> download vulnerabilities.                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> rfi                 <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Find remote <span class="token function">file</span> inclusion vulnerabilities.                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> rosetta_flash       <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find Rosetta Flash vulnerabilities <span class="token keyword">in</span> JSONP endpoints                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> shell_shock         <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find shell shock vulnerabilities.                                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> sqli                <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find SQL injection bugs.                                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> ssi                 <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find server side inclusion vulnerabilities.                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> ssl_certificate     <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Check the SSL certificate validity <span class="token punctuation">(</span>if https is being used<span class="token punctuation">)</span>.                              <span class="token operator">|</span><br>    <span class="token operator">|</span> un_ssl              <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find out <span class="token keyword">if</span> secure content can also be fetched using http.                                <span class="token operator">|</span><br>    <span class="token operator">|</span> websocket_hijacking <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Detect Cross-Site WebSocket hijacking vulnerabilities.                                    <span class="token operator">|</span><br>    <span class="token operator">|</span> xpath               <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find XPATH injection vulnerabilities.                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> xss                 <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Identify cross site scripting vulnerabilities.                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> xst                 <span class="token operator">|</span> Enabled <span class="token operator">|</span>      <span class="token operator">|</span> Find Cross Site Tracing vulnerabilities.                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">grep</span> all<br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> crawl web_spider<br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> list crawl<br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> Plugin name                  <span class="token operator">|</span> Status  <span class="token operator">|</span> Conf <span class="token operator">|</span> Description                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> archive_dot_org              <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Search archive.org to <span class="token function">find</span> new pages <span class="token keyword">in</span> the target site.                        <span class="token operator">|</span><br>    <span class="token operator">|</span> bing_spider                  <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Search Bing to get a list of new URLs                                           <span class="token operator">|</span><br>    <span class="token operator">|</span> content_negotiation          <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Use content negotiation to <span class="token function">find</span> new resources.                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> digit_sum                    <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Take an URL with a number <span class="token punctuation">(</span>index2.asp<span class="token punctuation">)</span> and try to <span class="token function">find</span> related                  <span class="token operator">|</span><br>    <span class="token operator">|</span>                              <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> files<span class="token punctuation">(</span>index1.asp, index3.asp<span class="token punctuation">)</span>.                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> dir_file_bruter              <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Finds Web server directories and files by bruteforcing.                         <span class="token operator">|</span><br>    <span class="token operator">|</span> dot_listing                  <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Search <span class="token keyword">for</span> .listing files and extracts new filenames from it.                   <span class="token operator">|</span><br>    <span class="token operator">|</span> dwsync_xml                   <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Search Dream Waver Sync <span class="token function">file</span> <span class="token punctuation">(</span>dwsync.xml<span class="token punctuation">)</span> and extract referenced files.         <span class="token operator">|</span><br>    <span class="token operator">|</span> find_backdoors               <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find web backdoors and web shells.                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> find_captchas                <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Identify captcha images on web pages.                                           <span class="token operator">|</span><br>    <span class="token operator">|</span> find_dvcs                    <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Search Git, Mercurial <span class="token punctuation">(</span>HG<span class="token punctuation">)</span>, Bazaar <span class="token punctuation">(</span>BZR<span class="token punctuation">)</span>, Subversion <span class="token punctuation">(</span>SVN<span class="token punctuation">)</span> and CVSrepositories  <span class="token operator">|</span><br>    <span class="token operator">|</span>                              <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> and checks <span class="token keyword">for</span> files containing                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span> genexus_xml                  <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Analyze the execute.xml and DeveloperMenu.xml files and <span class="token function">find</span> new URLs           <span class="token operator">|</span><br>    <span class="token operator">|</span> ghdb                         <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Search Google <span class="token keyword">for</span> vulnerabilities <span class="token keyword">in</span> the target site.                           <span class="token operator">|</span><br>    <span class="token operator">|</span> google_spider                <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Search google using google API to get new URLs                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> import_results               <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Import HTTP requests found by output.export_requests and Burp                   <span class="token operator">|</span><br>    <span class="token operator">|</span> oracle_discovery             <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find Oracle applications on the remote web server.                              <span class="token operator">|</span><br>    <span class="token operator">|</span> phishtank                    <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Search the phishtank.com database to determine <span class="token keyword">if</span> your server is <span class="token punctuation">(</span>or was<span class="token punctuation">)</span>being  <span class="token operator">|</span><br>    <span class="token operator">|</span>                              <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> used <span class="token keyword">in</span> phishing scams.                                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> phpinfo                      <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Search PHP Info <span class="token function">file</span> and <span class="token keyword">if</span> it finds it will determine the version of PHP.      <span class="token operator">|</span><br>    <span class="token operator">|</span> pykto                        <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> A nikto port to python.                                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> ria_enumerator               <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Fingerprint Rich Internet Apps - Google Gears Manifest files, Silverlight and   <span class="token operator">|</span><br>    <span class="token operator">|</span>                              <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Flash.                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span> robots_txt                   <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Analyze the robots.txt <span class="token function">file</span> and <span class="token function">find</span> new URLs                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> sitemap_xml                  <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Analyze the sitemap.xml <span class="token function">file</span> and <span class="token function">find</span> new URLs                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> spider_man                   <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> SpiderMan is a local proxy that will collect new URLs.                          <span class="token operator">|</span><br>    <span class="token operator">|</span> url_fuzzer                   <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Try to <span class="token function">find</span> backups, and other related files.                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> urllist_txt                  <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Analyze the urllist.txt <span class="token function">file</span> and <span class="token function">find</span> new URLs                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> user_dir                     <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Identify user directories like <span class="token string">“<a href="http://test/~user/&quot;" target="_blank" rel="noopener">http://test/~user/&quot;</a></span> and infer the remote OS.    <span class="token operator">|</span><br>    <span class="token operator">|</span> web_diff                     <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Compare a local directory with a remote URL path.                               <span class="token operator">|</span><br>    <span class="token operator">|</span> web_spider                   <span class="token operator">|</span> Enabled <span class="token operator">|</span> Yes  <span class="token operator">|</span> Crawl the web application.                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span> wordnet                      <span class="token operator">|</span>         <span class="token operator">|</span> Yes  <span class="token operator">|</span> Use the wordnet lexical database to <span class="token function">find</span> new URLs.                              <span class="token operator">|</span><br>    <span class="token operator">|</span> wordpress_enumerate_users    <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Finds <span class="token function">users</span> <span class="token keyword">in</span> a WordPress installation.                                        <span class="token operator">|</span><br>    <span class="token operator">|</span> wordpress_fingerprint        <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Finds the version of a WordPress installation.                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> wordpress_fullpathdisclosure <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Try to <span class="token function">find</span> the path where the WordPress is installed                           <span class="token operator">|</span><br>    <span class="token operator">|</span> wsdl_finder                  <span class="token operator">|</span>         <span class="token operator">|</span>      <span class="token operator">|</span> Find web <span class="token function">service</span> definitions files.                                             <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back  <span class="token comment">#插件选好之后，回到第一级目录</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li><li style="color: rgb(153, 153, 153);">58</li><li style="color: rgb(153, 153, 153);">59</li><li style="color: rgb(153, 153, 153);">60</li><li style="color: rgb(153, 153, 153);">61</li><li style="color: rgb(153, 153, 153);">62</li><li style="color: rgb(153, 153, 153);">63</li><li style="color: rgb(153, 153, 153);">64</li><li style="color: rgb(153, 153, 153);">65</li><li style="color: rgb(153, 153, 153);">66</li><li style="color: rgb(153, 153, 153);">67</li><li style="color: rgb(153, 153, 153);">68</li><li style="color: rgb(153, 153, 153);">69</li><li style="color: rgb(153, 153, 153);">70</li><li style="color: rgb(153, 153, 153);">71</li><li style="color: rgb(153, 153, 153);">72</li><li style="color: rgb(153, 153, 153);">73</li><li style="color: rgb(153, 153, 153);">74</li><li style="color: rgb(153, 153, 153);">75</li><li style="color: rgb(153, 153, 153);">76</li><li style="color: rgb(153, 153, 153);">77</li><li style="color: rgb(153, 153, 153);">78</li><li style="color: rgb(153, 153, 153);">79</li><li style="color: rgb(153, 153, 153);">80</li><li style="color: rgb(153, 153, 153);">81</li><li style="color: rgb(153, 153, 153);">82</li><li style="color: rgb(153, 153, 153);">83</li><li style="color: rgb(153, 153, 153);">84</li><li style="color: rgb(153, 153, 153);">85</li><li style="color: rgb(153, 153, 153);">86</li><li style="color: rgb(153, 153, 153);">87</li><li style="color: rgb(153, 153, 153);">88</li><li style="color: rgb(153, 153, 153);">89</li><li style="color: rgb(153, 153, 153);">90</li><li style="color: rgb(153, 153, 153);">91</li><li style="color: rgb(153, 153, 153);">92</li><li style="color: rgb(153, 153, 153);">93</li><li style="color: rgb(153, 153, 153);">94</li><li style="color: rgb(153, 153, 153);">95</li><li style="color: rgb(153, 153, 153);">96</li><li style="color: rgb(153, 153, 153);">97</li><li style="color: rgb(153, 153, 153);">98</li><li style="color: rgb(153, 153, 153);">99</li><li style="color: rgb(153, 153, 153);">100</li><li style="color: rgb(153, 153, 153);">101</li><li style="color: rgb(153, 153, 153);">102</li><li style="color: rgb(153, 153, 153);">103</li><li style="color: rgb(153, 153, 153);">104</li><li style="color: rgb(153, 153, 153);">105</li><li style="color: rgb(153, 153, 153);">106</li><li style="color: rgb(153, 153, 153);">107</li><li style="color: rgb(153, 153, 153);">108</li><li style="color: rgb(153, 153, 153);">109</li><li style="color: rgb(153, 153, 153);">110</li><li style="color: rgb(153, 153, 153);">111</li><li style="color: rgb(153, 153, 153);">112</li><li style="color: rgb(153, 153, 153);">113</li><li style="color: rgb(153, 153, 153);">114</li><li style="color: rgb(153, 153, 153);">115</li><li style="color: rgb(153, 153, 153);">116</li><li style="color: rgb(153, 153, 153);">117</li><li style="color: rgb(153, 153, 153);">118</li><li style="color: rgb(153, 153, 153);">119</li><li style="color: rgb(153, 153, 153);">120</li><li style="color: rgb(153, 153, 153);">121</li><li style="color: rgb(153, 153, 153);">122</li><li style="color: rgb(153, 153, 153);">123</li><li style="color: rgb(153, 153, 153);">124</li><li style="color: rgb(153, 153, 153);">125</li><li style="color: rgb(153, 153, 153);">126</li><li style="color: rgb(153, 153, 153);">127</li><li style="color: rgb(153, 153, 153);">128</li><li style="color: rgb(153, 153, 153);">129</li><li style="color: rgb(153, 153, 153);">130</li><li style="color: rgb(153, 153, 153);">131</li><li style="color: rgb(153, 153, 153);">132</li><li style="color: rgb(153, 153, 153);">133</li><li style="color: rgb(153, 153, 153);">134</li><li style="color: rgb(153, 153, 153);">135</li><li style="color: rgb(153, 153, 153);">136</li><li style="color: rgb(153, 153, 153);">137</li><li style="color: rgb(153, 153, 153);">138</li><li style="color: rgb(153, 153, 153);">139</li><li style="color: rgb(153, 153, 153);">140</li><li style="color: rgb(153, 153, 153);">141</li><li style="color: rgb(153, 153, 153);">142</li><li style="color: rgb(153, 153, 153);">143</li><li style="color: rgb(153, 153, 153);">144</li><li style="color: rgb(153, 153, 153);">145</li><li style="color: rgb(153, 153, 153);">146</li><li style="color: rgb(153, 153, 153);">147</li><li style="color: rgb(153, 153, 153);">148</li><li style="color: rgb(153, 153, 153);">149</li><li style="color: rgb(153, 153, 153);">150</li><li style="color: rgb(153, 153, 153);">151</li><li style="color: rgb(153, 153, 153);">152</li><li style="color: rgb(153, 153, 153);">153</li><li style="color: rgb(153, 153, 153);">154</li><li style="color: rgb(153, 153, 153);">155</li><li style="color: rgb(153, 153, 153);">156</li><li style="color: rgb(153, 153, 153);">157</li><li style="color: rgb(153, 153, 153);">158</li><li style="color: rgb(153, 153, 153);">159</li><li style="color: rgb(153, 153, 153);">160</li><li style="color: rgb(153, 153, 153);">161</li><li style="color: rgb(153, 153, 153);">162</li><li style="color: rgb(153, 153, 153);">163</li><li style="color: rgb(153, 153, 153);">164</li><li style="color: rgb(153, 153, 153);">165</li><li style="color: rgb(153, 153, 153);">166</li><li style="color: rgb(153, 153, 153);">167</li><li style="color: rgb(153, 153, 153);">168</li><li style="color: rgb(153, 153, 153);">169</li><li style="color: rgb(153, 153, 153);">170</li><li style="color: rgb(153, 153, 153);">171</li><li style="color: rgb(153, 153, 153);">172</li><li style="color: rgb(153, 153, 153);">173</li><li style="color: rgb(153, 153, 153);">174</li><li style="color: rgb(153, 153, 153);">175</li><li style="color: rgb(153, 153, 153);">176</li><li style="color: rgb(153, 153, 153);">177</li><li style="color: rgb(153, 153, 153);">178</li><li style="color: rgb(153, 153, 153);">179</li><li style="color: rgb(153, 153, 153);">180</li><li style="color: rgb(153, 153, 153);">181</li><li style="color: rgb(153, 153, 153);">182</li><li style="color: rgb(153, 153, 153);">183</li><li style="color: rgb(153, 153, 153);">184</li><li style="color: rgb(153, 153, 153);">185</li><li style="color: rgb(153, 153, 153);">186</li><li style="color: rgb(153, 153, 153);">187</li></ul><br><h4><a id="profile_242"></a>profile模块</h4><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> start             <span class="token operator">|</span> Start the scan.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> plugins           <span class="token operator">|</span> Enable and configure plugins.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> exploit           <span class="token operator">|</span> Exploit the vulnerability.                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> profiles          <span class="token operator">|</span> List and use scan profiles.                                                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> cleanup           <span class="token operator">|</span> Cleanup before starting a new scan.                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">help</span>              <span class="token operator">|</span> Display help. Issuing: <span class="token function">help</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span> , prints <span class="token function">more</span> specific <span class="token function">help</span> about <span class="token string">“command”</span>                            <span class="token operator">|</span><br>    <span class="token operator">|</span> version           <span class="token operator">|</span> Show w3af version information.                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> keys              <span class="token operator">|</span> Display key shortcuts.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> http-settings     <span class="token operator">|</span> Configure the HTTP settings of the framework.                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> misc-settings     <span class="token operator">|</span> Configure w3af misc settings.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> target            <span class="token operator">|</span> Configure the target URL.                                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back              <span class="token operator">|</span> Go to the previous menu.                                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>              <span class="token operator">|</span> Exit w3af.                                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> kb                <span class="token operator">|</span> Browse the vulnerabilities stored <span class="token keyword">in</span> the Knowledge Base                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> profiles <span class="token comment">#预定义扫描文件</span><br>w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> list <span class="token comment">#显示当前可用扫描配置文件</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> Profile               <span class="token operator">|</span> Description                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> bruteforce            <span class="token operator">|</span> Bruteforce form or basic authentication access controls using default credentials. To run this profile,  <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> <span class="token keyword">set</span> the target URL to the resource where the access control is, and <span class="token keyword">then</span> click on Start.                 <span class="token operator">|</span><br>    <span class="token operator">|</span> audit_high_risk       <span class="token operator">|</span> Perform a scan to only identify the vulnerabilities with higher risk, like SQL Injection, OS Commanding, <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> Insecure File Uploads, etc.                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> full_audit            <span class="token operator">|</span> This profile performs a full audit of the target website, using only the web_spider plugin <span class="token keyword">for</span> crawling. <span class="token operator">|</span><br>    <span class="token operator">|</span> OWASP_TOP10           <span class="token operator">|</span> The Open Web Application Security Project <span class="token punctuation">(</span>OWASP<span class="token punctuation">)</span> is a worldwide <span class="token function">free</span> and <span class="token function">open</span> community focused on      <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> improving the security of application software. OWASP searched <span class="token keyword">for</span> and published the ten <span class="token function">most</span> common     <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> security flaws. This profile search <span class="token keyword">for</span> this <span class="token function">top</span> 10 security flaws. For <span class="token function">more</span> information about the       <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> security flaws: <a href="http://www.owasp.org/index.php/OWASP_Top_Ten_Project" target="_blank" rel="noopener">http://www.owasp.org/index.php/OWASP_Top_Ten_Project</a> <span class="token keyword">.</span>                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> fast_scan             <span class="token operator">|</span> Perform a fast scan of the target site, using only a few discovery plugins and the fastest audit         <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> plugins.                                                                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span> empty_profile         <span class="token operator">|</span> This is an empty profile that you can use to start a new configuration from.                             <span class="token operator">|</span><br>    <span class="token operator">|</span> web_infrastructure    <span class="token operator">|</span> Use all the available techniques <span class="token keyword">in</span> w3af to fingerprint the remote Web infrastructure.                   <span class="token operator">|</span><br>    <span class="token operator">|</span> full_audit_spider_man <span class="token operator">|</span> Perform a manual discovery using the spider_man plugin, and afterwards scan the site <span class="token keyword">for</span> any known       <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> vulnerabilities.                                                                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> sitemap               <span class="token operator">|</span> Use different online techniques to create a fast sitemap of the target web application. This plugin will <span class="token operator">|</span><br>    <span class="token operator">|</span>                       <span class="token operator">|</span> only work <span class="token keyword">if</span> you’ve got Internet access and the target web application is being spidered by Yahoo<span class="token operator">!</span>       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> use               <span class="token operator">|</span> Use a profile.                                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> list              <span class="token operator">|</span> List available profiles.                                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> save_as           <span class="token operator">|</span> Save the current configuration to a profile.                                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back              <span class="token operator">|</span> Go to the previous menu.                                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>              <span class="token operator">|</span> Exit w3af.                                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> save_as <span class="token comment">#先选择 plugin ，然后选择 grep、crawl等，然后在 profiles 里面 save_as 保存</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li></ul><br><p>例</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> save_as test01<br>    Parameter missing, please see the help:<br>    Save the current configuration to a profile.<br>    Syntax: save_as PROFILE_NAME<br>    Example: save_as fast_scan<br>    Example: save_as fast_scan self-contained <span class="token comment">#独立的，能避免一些问题</span><br><br>    Please note that the save_as <span class="token function">command</span> will overwrite existing profiles with the<br>    same name.<br><br>    When the <span class="token string">“self-contained”</span> flag is <span class="token keyword">set</span> the profile will bundle all files referenced<br>    by the plugin configurations. This is useful <span class="token keyword">for</span> sharing custom profiles between<br>    different workstations. Disabled by default.<br>w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> use fast_scan<br>    The plugins configured by the scan profile have been enabled, and their options configured.<br>    Please <span class="token keyword">set</span> the target URL<span class="token punctuation">(</span>s<span class="token punctuation">)</span> and start the scan.<br>w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li></ul><br><h4><a id="helpsetting_322"></a>help-setting模块</h4><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> start             <span class="token operator">|</span> Start the scan.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> plugins           <span class="token operator">|</span> Enable and configure plugins.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> exploit           <span class="token operator">|</span> Exploit the vulnerability.                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> profiles          <span class="token operator">|</span> List and use scan profiles.                                                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> cleanup           <span class="token operator">|</span> Cleanup before starting a new scan.                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">help</span>              <span class="token operator">|</span> Display help. Issuing: <span class="token function">help</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span> , prints <span class="token function">more</span> specific <span class="token function">help</span> about <span class="token string">“command”</span>                            <span class="token operator">|</span><br>    <span class="token operator">|</span> version           <span class="token operator">|</span> Show w3af version information.                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> keys              <span class="token operator">|</span> Display key shortcuts.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> http-settings     <span class="token operator">|</span> Configure the HTTP settings of the framework.                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> misc-settings     <span class="token operator">|</span> Configure w3af misc settings.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> target            <span class="token operator">|</span> Configure the target URL.                                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back              <span class="token operator">|</span> Go to the previous menu.                                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>              <span class="token operator">|</span> Exit w3af.                                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> kb                <span class="token operator">|</span> Browse the vulnerabilities stored <span class="token keyword">in</span> the Knowledge Base                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> http-settings <span class="token comment">#扫描 http 的配置选项</span><br>w3af/config:http-settings<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> view       <span class="token operator">|</span> List the available options and their values.                                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">set</span>        <span class="token operator">|</span> Set a parameter value.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> save       <span class="token operator">|</span> Save the configured settings.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back       <span class="token operator">|</span> Go to the previous menu.                                                                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>       <span class="token operator">|</span> Exit w3af.                                                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af/config:http-settings<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> view<br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> Setting                 <span class="token operator">|</span> Value    <span class="token operator">|</span> Modified <span class="token operator">|</span> Description                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> url_parameter           <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> URL parameter <span class="token punctuation">(</span><a href="http://host.tld/path" target="_blank" rel="noopener">http://host.tld/path</a><span class="token punctuation">;</span><span class="token operator">&lt;</span>parameter<span class="token operator">&gt;</span><span class="token punctuation">)</span>                               <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">timeout</span>                 <span class="token operator">|</span> 0        <span class="token operator">|</span>          <span class="token operator">|</span> HTTP connection <span class="token function">timeout</span>                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span> headers_file            <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> HTTP headers filename <span class="token function">which</span> contains additional headers to be added <span class="token keyword">in</span> each    <span class="token operator">|</span><br>    <span class="token operator">|</span>                         <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> request                                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> cookie_jar_file         <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Cookie Jar <span class="token function">file</span> holding HTTP cookies                                           <span class="token operator">|</span><br>    <span class="token operator">|</span> ignore_session_cookies  <span class="token operator">|</span> False    <span class="token operator">|</span>          <span class="token operator">|</span> Ignore session cookies                                                         <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> ntlm_auth_url           <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> NTLM authentication domain <span class="token punctuation">(</span>target domain name<span class="token punctuation">)</span>                                <span class="token operator">|</span><br>    <span class="token operator">|</span> ntlm_auth_user          <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> NTLM authentication username                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> ntlm_auth_passwd        <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> NTLM authentication password                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> ntlm_auth_domain        <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> NTLM authentication domain <span class="token punctuation">(</span>windows domain name<span class="token punctuation">)</span>                               <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> rand_user_agent         <span class="token operator">|</span> False    <span class="token operator">|</span>          <span class="token operator">|</span> Use random User-Agent header                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> max_file_size           <span class="token operator">|</span> 400000   <span class="token operator">|</span>          <span class="token operator">|</span> Maximum <span class="token function">file</span> size                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> max_http_retries        <span class="token operator">|</span> 2        <span class="token operator">|</span>          <span class="token operator">|</span> Maximum number of HTTP request retries                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> user_agent              <span class="token operator">|</span> w3af.org <span class="token operator">|</span>          <span class="token operator">|</span> User Agent header                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> max_requests_per_second <span class="token operator">|</span> 0        <span class="token operator">|</span>          <span class="token operator">|</span> Maximum HTTP requests per second                                               <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> string_match_404        <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Tag HTTP response as 404 <span class="token keyword">if</span> the string is found <span class="token keyword">in</span> it<span class="token string">‘s body                   |<br>    | always_404              |          |          | Comma separated list of URLs which will always be detected as 404 pages        |<br>    | never_404               |          |          | Comma separated list of URLs which will never be detected as 404 pages         |<br>    |——————————————————————————————————————————–|<br>    | proxy_port              | 8080     |          | Proxy TCP port                                                                 |<br>    | proxy_address           |          |          | Proxy IP address                                                               |<br>    |——————————————————————————————————————————–|<br>    | basic_auth_user         |          |          | Basic authentication username                                                  |<br>    | basic_auth_passwd       |          |          | Basic authentication password                                                  |<br>    | basic_auth_domain       |          |          | Basic authentication domain                                                    |<br>    |——————————————————————————————————————————–|<br>w3af/config:http-settings&gt;&gt;&gt; set rand_user_agent  True  （启动随机用户代理）<br>w3af/config:http-settings&gt;&gt;&gt; view<br>    |——————————————————————————————————————————–|<br>    | Setting                 | Value    | Modified | Description                                                                    |<br>    |——————————————————————————————————————————–|<br>    | url_parameter           |          |          | URL parameter (<a href="http://host.tld/path;&lt;parameter&gt;" target="_blank" rel="noopener">http://host.tld/path;&lt;parameter&gt;</a>)                               |<br>    | timeout                 | 0        |          | HTTP connection timeout                                                        |<br>    | headers_file            |          |          | HTTP headers filename which contains additional headers to be added in each    |<br>    |                         |          |          | request                                                                        |<br>    |——————————————————————————————————————————–|<br>    | cookie_jar_file         |          |          | Cookie Jar file holding HTTP cookies                                           |<br>    | ignore_session_cookies  | False    |          | Ignore session cookies                                                         |<br>    |——————————————————————————————————————————–|<br>    | ntlm_auth_url           |          |          | NTLM authentication domain (target domain name)                                |<br>    | ntlm_auth_user          |          |          | NTLM authentication username                                                   |<br>    | ntlm_auth_passwd        |          |          | NTLM authentication password                                                   |<br>    | ntlm_auth_domain        |          |          | NTLM authentication domain (windows domain name)                               |<br>    |——————————————————————————————————————————–|<br>    | rand_user_agent         | True     | Yes      | Use random User-Agent header                                                   |<br>    | max_file_size           | 400000   |          | Maximum file size                                                              |<br>    | max_http_retries        | 2        |          | Maximum number of HTTP request retries                                         |<br>    | user_agent              | w3af.org |          | User Agent header                                                              |<br>    | max_requests_per_second | 0        |          | Maximum HTTP requests per second                                               |<br>    |——————————————————————————————————————————–|<br>    | string_match_404        |          |          | Tag HTTP response as 404 if the string is found in it’</span>s body                   <span class="token operator">|</span><br>    <span class="token operator">|</span> always_404              <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Comma separated list of URLs <span class="token function">which</span> will always be detected as 404 pages        <span class="token operator">|</span><br>    <span class="token operator">|</span> never_404               <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Comma separated list of URLs <span class="token function">which</span> will never be detected as 404 pages         <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> proxy_port              <span class="token operator">|</span> 8080     <span class="token operator">|</span>          <span class="token operator">|</span> Proxy TCP port                                                                 <span class="token operator">|</span><br>    <span class="token operator">|</span> proxy_address           <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Proxy IP address                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> basic_auth_user         <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Basic authentication username                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> basic_auth_passwd       <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Basic authentication password                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> basic_auth_domain       <span class="token operator">|</span>          <span class="token operator">|</span>          <span class="token operator">|</span> Basic authentication domain                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span>——————————————————————————————————————————–<span class="token operator">|</span><br>w3af/config:http-settings<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    The configuration has been saved.<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li><li style="color: rgb(153, 153, 153);">58</li><li style="color: rgb(153, 153, 153);">59</li><li style="color: rgb(153, 153, 153);">60</li><li style="color: rgb(153, 153, 153);">61</li><li style="color: rgb(153, 153, 153);">62</li><li style="color: rgb(153, 153, 153);">63</li><li style="color: rgb(153, 153, 153);">64</li><li style="color: rgb(153, 153, 153);">65</li><li style="color: rgb(153, 153, 153);">66</li><li style="color: rgb(153, 153, 153);">67</li><li style="color: rgb(153, 153, 153);">68</li><li style="color: rgb(153, 153, 153);">69</li><li style="color: rgb(153, 153, 153);">70</li><li style="color: rgb(153, 153, 153);">71</li><li style="color: rgb(153, 153, 153);">72</li><li style="color: rgb(153, 153, 153);">73</li><li style="color: rgb(153, 153, 153);">74</li><li style="color: rgb(153, 153, 153);">75</li><li style="color: rgb(153, 153, 153);">76</li><li style="color: rgb(153, 153, 153);">77</li><li style="color: rgb(153, 153, 153);">78</li><li style="color: rgb(153, 153, 153);">79</li><li style="color: rgb(153, 153, 153);">80</li><li style="color: rgb(153, 153, 153);">81</li><li style="color: rgb(153, 153, 153);">82</li><li style="color: rgb(153, 153, 153);">83</li><li style="color: rgb(153, 153, 153);">84</li><li style="color: rgb(153, 153, 153);">85</li><li style="color: rgb(153, 153, 153);">86</li><li style="color: rgb(153, 153, 153);">87</li><li style="color: rgb(153, 153, 153);">88</li><li style="color: rgb(153, 153, 153);">89</li><li style="color: rgb(153, 153, 153);">90</li><li style="color: rgb(153, 153, 153);">91</li><li style="color: rgb(153, 153, 153);">92</li><li style="color: rgb(153, 153, 153);">93</li><li style="color: rgb(153, 153, 153);">94</li><li style="color: rgb(153, 153, 153);">95</li><li style="color: rgb(153, 153, 153);">96</li><li style="color: rgb(153, 153, 153);">97</li><li style="color: rgb(153, 153, 153);">98</li><li style="color: rgb(153, 153, 153);">99</li><li style="color: rgb(153, 153, 153);">100</li><li style="color: rgb(153, 153, 153);">101</li></ul><br><h4><a id="miscsettings_428"></a>misc-settings模块</h4><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> start             <span class="token operator">|</span> Start the scan.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> plugins           <span class="token operator">|</span> Enable and configure plugins.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> exploit           <span class="token operator">|</span> Exploit the vulnerability.                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> profiles          <span class="token operator">|</span> List and use scan profiles.                                                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> cleanup           <span class="token operator">|</span> Cleanup before starting a new scan.                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">help</span>              <span class="token operator">|</span> Display help. Issuing: <span class="token function">help</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span> , prints <span class="token function">more</span> specific <span class="token function">help</span> about <span class="token string">“command”</span>                            <span class="token operator">|</span><br>    <span class="token operator">|</span> version           <span class="token operator">|</span> Show w3af version information.                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> keys              <span class="token operator">|</span> Display key shortcuts.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> http-settings     <span class="token operator">|</span> Configure the HTTP settings of the framework.                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> misc-settings     <span class="token operator">|</span> Configure w3af misc settings.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> target            <span class="token operator">|</span> Configure the target URL.                                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back              <span class="token operator">|</span> Go to the previous menu.                                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>              <span class="token operator">|</span> Exit w3af.                                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> kb                <span class="token operator">|</span> Browse the vulnerabilities stored <span class="token keyword">in</span> the Knowledge Base                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> misc-settings <span class="token comment">#杂项设置</span><br>w3af/config:misc-settings<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> view<br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> Setting                 <span class="token operator">|</span> Value                 <span class="token operator">|</span> Modified <span class="token operator">|</span> Description                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> msf_location            <span class="token operator">|</span> /opt/metasploit3/bin/ <span class="token operator">|</span>          <span class="token operator">|</span> Full path of Metasploit framework binary directory                 <span class="token operator">|</span><br>    <span class="token operator">|</span>                         <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> <span class="token punctuation">(</span>/opt/metasploit3/bin/ <span class="token keyword">in</span> <span class="token function">most</span> linux installs<span class="token punctuation">)</span>                     <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> interface               <span class="token operator">|</span> ppp0                  <span class="token operator">|</span>          <span class="token operator">|</span> Local interface name to use when sniffing, doing reverse           <span class="token operator">|</span><br>    <span class="token operator">|</span>                         <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> connections, etc.                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> local_ip_address        <span class="token operator">|</span> 10.10.10.128          <span class="token operator">|</span>          <span class="token operator">|</span> Local IP address to use when doing reverse connections             <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> max_discovery_time      <span class="token operator">|</span> 120                   <span class="token operator">|</span>          <span class="token operator">|</span> Maximum crawl <span class="token function">time</span> <span class="token punctuation">(</span>minutes<span class="token punctuation">)</span>                                       <span class="token operator">|</span><br>    <span class="token operator">|</span> stop_on_first_exception <span class="token operator">|</span> False                 <span class="token operator">|</span>          <span class="token operator">|</span> Stop scan after first unhandled exception                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> form_id_action          <span class="token operator">|</span> exclude               <span class="token operator">|</span>          <span class="token operator">|</span> Define the form_id_list filter behaviour                           <span class="token operator">|</span><br>    <span class="token operator">|</span> non_targets             <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> A comma separated list of URLs that w3af should ignore             <span class="token operator">|</span><br>    <span class="token operator">|</span> form_id_list            <span class="token operator">|</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>                    <span class="token operator">|</span>          <span class="token operator">|</span> Filter forms to scan using form IDs                                <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>    <span class="token operator">|</span> fuzz_url_filenames      <span class="token operator">|</span> False                 <span class="token operator">|</span>          <span class="token operator">|</span> Indicates <span class="token keyword">if</span> w3af plugins will send fuzzed <span class="token function">file</span> names <span class="token keyword">in</span> order to  <span class="token operator">|</span><br>    <span class="token operator">|</span>                         <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> <span class="token function">find</span> vulnerabilities                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> fuzz_url_parts          <span class="token operator">|</span> False                 <span class="token operator">|</span>          <span class="token operator">|</span> Indicates <span class="token keyword">if</span> w3af plugins will send fuzzed URL parts <span class="token keyword">in</span> order to   <span class="token operator">|</span><br>    <span class="token operator">|</span>                         <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> <span class="token function">find</span> vulnerabilities                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> fuzzable_headers        <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> A list with all fuzzable header names                              <span class="token operator">|</span><br>    <span class="token operator">|</span> fuzzed_files_extension  <span class="token operator">|</span> gif                   <span class="token operator">|</span>          <span class="token operator">|</span> Indicates the extension to use when fuzzing <span class="token function">file</span> content           <span class="token operator">|</span><br>    <span class="token operator">|</span> form_fuzzing_mode       <span class="token operator">|</span> tmb                   <span class="token operator">|</span>          <span class="token operator">|</span> Indicates what HTML form combo values w3af plugins will use: all,  <span class="token operator">|</span><br>    <span class="token operator">|</span>                         <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> tb, tmb, t, b                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span> fuzz_form_files         <span class="token operator">|</span> True                  <span class="token operator">|</span>          <span class="token operator">|</span> Indicates <span class="token keyword">if</span> w3af plugins will send payloads <span class="token keyword">in</span> the content of     <span class="token operator">|</span><br>    <span class="token operator">|</span>                         <span class="token operator">|</span>                       <span class="token operator">|</span>          <span class="token operator">|</span> multipart/post form files.                                         <span class="token operator">|</span><br>    <span class="token operator">|</span> fuzz_cookies            <span class="token operator">|</span> False                 <span class="token operator">|</span>          <span class="token operator">|</span> Indicates <span class="token keyword">if</span> w3af plugins will use cookies as a fuzzable parameter <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————<span class="token operator">|</span><br>w3af/config:misc-settings<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> view       <span class="token operator">|</span> List the available options and their values.                                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">set</span>        <span class="token operator">|</span> Set a parameter value.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> save       <span class="token operator">|</span> Save the configured settings.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back       <span class="token operator">|</span> Go to the previous menu.                                                                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>       <span class="token operator">|</span> Exit w3af.                                                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af/config:misc-settings<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    The configuration has been saved.<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li><li style="color: rgb(153, 153, 153);">58</li><li style="color: rgb(153, 153, 153);">59</li><li style="color: rgb(153, 153, 153);">60</li><li style="color: rgb(153, 153, 153);">61</li><li style="color: rgb(153, 153, 153);">62</li></ul><br><h4><a id="target_495"></a>target模块</h4><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> start             <span class="token operator">|</span> Start the scan.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> plugins           <span class="token operator">|</span> Enable and configure plugins.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> exploit           <span class="token operator">|</span> Exploit the vulnerability.                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span> profiles          <span class="token operator">|</span> List and use scan profiles.                                                                                  <span class="token operator">|</span><br>    <span class="token operator">|</span> cleanup           <span class="token operator">|</span> Cleanup before starting a new scan.                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token function">help</span>              <span class="token operator">|</span> Display help. Issuing: <span class="token function">help</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span> , prints <span class="token function">more</span> specific <span class="token function">help</span> about <span class="token string">“command”</span>                            <span class="token operator">|</span><br>    <span class="token operator">|</span> version           <span class="token operator">|</span> Show w3af version information.                                                                               <span class="token operator">|</span><br>    <span class="token operator">|</span> keys              <span class="token operator">|</span> Display key shortcuts.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> http-settings     <span class="token operator">|</span> Configure the HTTP settings of the framework.                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> misc-settings     <span class="token operator">|</span> Configure w3af misc settings.                                                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> target            <span class="token operator">|</span> Configure the target URL.                                                                                    <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back              <span class="token operator">|</span> Go to the previous menu.                                                                                     <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>              <span class="token operator">|</span> Exit w3af.                                                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> kb                <span class="token operator">|</span> Browse the vulnerabilities stored <span class="token keyword">in</span> the Knowledge Base                                                      <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> target<br>w3af/config:target<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">help</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> view       <span class="token operator">|</span> List the available options and their values.                                                                        <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">set</span>        <span class="token operator">|</span> Set a parameter value.                                                                                              <span class="token operator">|</span><br>    <span class="token operator">|</span> save       <span class="token operator">|</span> Save the configured settings.                                                                                       <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>    <span class="token operator">|</span> back       <span class="token operator">|</span> Go to the previous menu.                                                                                            <span class="token operator">|</span><br>    <span class="token operator">|</span> <span class="token keyword">exit</span>       <span class="token operator">|</span> Exit w3af.                                                                                                          <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————-<span class="token operator">|</span><br>w3af/config:target<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token keyword">set</span> target <a href="http://10.10.10.129" target="_blank" rel="noopener">http://10.10.10.129</a><br>w3af/config:target<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> view<br>    <span class="token operator">|</span>———————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> Setting          <span class="token operator">|</span> Value               <span class="token operator">|</span> Modified <span class="token operator">|</span> Description                                                                   <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————–<span class="token operator">|</span><br>    <span class="token operator">|</span> target_framework <span class="token operator">|</span> unknown             <span class="token operator">|</span>          <span class="token operator">|</span> Target programming framework <span class="token punctuation">(</span>unknown/php/asp/asp.net/java/jsp/cfm/ruby/perl<span class="token punctuation">)</span> <span class="token operator">|</span><br>    <span class="token operator">|</span> target           <span class="token operator">|</span> <a href="http://10.10.10.129" target="_blank" rel="noopener">http://10.10.10.129</a> <span class="token operator">|</span> Yes      <span class="token operator">|</span> A comma separated list of URLs                                                <span class="token operator">|</span><br>    <span class="token operator">|</span> target_os        <span class="token operator">|</span> unknown             <span class="token operator">|</span>          <span class="token operator">|</span> Target operating system <span class="token punctuation">(</span>unknown/unix/windows<span class="token punctuation">)</span>                                <span class="token operator">|</span><br>    <span class="token operator">|</span>———————————————————————————————————————————–<span class="token operator">|</span><br>w3af/config:target<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    The configuration has been saved.<br><span class="token comment">#配置完成，可以保存为配置文件</span><br>w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> profiles<br>w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> save_as test01<br>    Profile saved.<br>w3af/profiles<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back <div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li></ul><br><h4><a id="_546"></a>脚本</h4><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">root@attacker:~<span class="token comment"># cd /usr/local/src/ </span><br>root@attacker:/usr/local/src<span class="token comment"># ls </span><br>    circle.yml  libjavascriptcoregtk-1.0-0_2.4.11-3_amd64.deb  python-support_1.0.15_all.deb    scripts  w3af_api      w3afgui<br>    doc         libwebkitgtk-1.0-0_2.4.11-3_amd64.deb          python-webkit_1.1.8-3_amd64.deb  tools    w3afconsole   w3af_gui<br>    extras      profiles                                       README.md                        w3af     w3af_console  wXf-master<br>root@attacker:/usr/local/src<span class="token comment"># cd scripts/ </span><br>root@attacker:/usr/local/src/scripts<span class="token comment"># ls </span><br>    allowed_methods.w3af           file_upload_shell.w3af            profile-fast_scan.w3af<br>    all.w3af                       frontpage_version.w3af            remote_file_include_local_ws.w3af<br>    auth_detailed.w3af             header_fuzzing.w3af               remote_file_include_proxy.w3af<br>    bing_spider.w3af               html_output.w3af                  remote_file_include_shell.w3af<br>    blind_sqli_detection.w3af      list_all_plugins.w3af             remote_file_include_shell-xss.w3af<br>    cookie_fuzzing.w3af            local_file_include-payload.w3af   remote_file_include_w3af_site.w3af<br>    cross_domain.w3af              local_file_include.w3af           spider_man.w3af<br>    csrf.w3af                      login_brute_form_GET.w3af         sqli.w3af<br>    dav_shell.w3af                 login_brute_password_only.w3af    sqlmap_exploit_int.w3af<br>    detect_transparent_proxy.w3af  mangle_request.w3af               targets_from_file.w3af<br>    digit_sum.w3af                 mangle_response.w3af              web_spider-ignore_regex.w3af<br>    eval_shell.w3af                os_commanding-lnx-vdaemon.w3af    web_spider-only_forward.w3af<br>    eval.w3af                      os_commanding-lnx-w3afAgent.w3af  web_spider.w3af<br>    exploit_all.w3af               os_commanding_shell.w3af          xss_simple.w3af<br>    exploit_fast.w3af              os_commanding.w3af                xss_stored.w3af<br>    filename_xss.w3af              php_sca-payload.w3af<br>root@attacker:/usr/local/src/scripts<span class="token comment"># cat sqli.w3af  </span><br>    <span class="token comment"># This is a demo of the attack plugin sql_shell </span><br>    plugins<br>    output console,text_file<br>    output config text_file<br>    <span class="token keyword">set</span> output_file output-w3af.txt<br>    <span class="token keyword">set</span> verbose True<br>    back<br>    output config console<br>    <span class="token keyword">set</span> verbose False<br>    back<br>    audit sqli<br>    crawl web_spider<br>    crawl config web_spider<br>    <span class="token keyword">set</span> only_forward True<br>    back<br>    <span class="token function">grep</span> path_disclosure<br>    back<br>    target<br>    <span class="token keyword">set</span> target <a href="http://moth/w3af/audit/sql_injection/select/sql_injection_string.php?name" target="_blank" rel="noopener">http://moth/w3af/audit/sql_injection/select/sql_injection_string.php?name</a><span class="token operator">=</span>andres<br>    back<br>    start<br>    bug-report<br>    details 0<br>    back<br>    <span class="token keyword">exit</span><br>root@attacker:/usr/local/src<span class="token comment"># ./w3afconsole -s ./scripts/sqli.w3af  </span><br>    w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> plugins<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> output console,text_file<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> output config text_file<br>    w3af/plugins/output/config:text_file<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token keyword">set</span> output_file output-w3af.txt<br>    w3af/plugins/output/config:text_file<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token keyword">set</span> verbose True<br>    w3af/plugins/output/config:text_file<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    The configuration has been saved.<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> output config console<br>    w3af/plugins/output/config:console<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token keyword">set</span> verbose False<br>    w3af/plugins/output/config:console<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    The configuration has been saved.<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> audit sqli<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> crawl web_spider<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> crawl config web_spider<br>    w3af/plugins/crawl/config:web_spider<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token keyword">set</span> only_forward True<br>    w3af/plugins/crawl/config:web_spider<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    The configuration has been saved.<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token function">grep</span> path_disclosure<br>    w3af/plugins<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> target<br>    w3af/config:target<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token keyword">set</span> target <a href="http://moth/w3af/audit/sql_injection/select/sql_injection_string.php?name" target="_blank" rel="noopener">http://moth/w3af/audit/sql_injection/select/sql_injection_string.php?name</a><span class="token operator">=</span>andres<br>    w3af/config:target<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> back<br>    The configuration has been saved.<br>    w3af<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> start<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li><li style="color: rgb(153, 153, 153);">58</li><li style="color: rgb(153, 153, 153);">59</li><li style="color: rgb(153, 153, 153);">60</li><li style="color: rgb(153, 153, 153);">61</li><li style="color: rgb(153, 153, 153);">62</li><li style="color: rgb(153, 153, 153);">63</li><li style="color: rgb(153, 153, 153);">64</li><li style="color: rgb(153, 153, 153);">65</li><li style="color: rgb(153, 153, 153);">66</li><li style="color: rgb(153, 153, 153);">67</li><li style="color: rgb(153, 153, 153);">68</li><li style="color: rgb(153, 153, 153);">69</li><li style="color: rgb(153, 153, 153);">70</li><li style="color: rgb(153, 153, 153);">71</li><li style="color: rgb(153, 153, 153);">72</li><li style="color: rgb(153, 153, 153);">73</li></ul><br><h2><a name="t3"></a><a name="t3"></a><a id="3_625"></a>3、身份认证</h2><br><p>w3af支持用户可以提供的这些类型的认证凭证，以便扫描器保持会话打开以扫描目标Web应用程序：</p><br><ul><li>HTTP基本认证</li><li>NTLM身份验证</li><li>基于表单认证</li><li>设置一个HTTP cookie</li></ul><br><p>HTTP Basic和NTLM身份验证是通常由Web服务器提供的两种HTTP级别身份验证<br> 表单和Cookie身份验证方法则由应用程序本身提供<br> 用户需要确定与应用程序保持会话需要使用哪种身份验证方法<br> 通常情况下，快速检查HTTP通信将确定需要什么。</p><br><h4><a id="_637"></a>基本身份认证</h4><br><p>启动安装界面 appwiz.cpl<br> 启动 IIS 服务器<br> 设置 IIS 服务器的属性<br> 设置目录安全性<br> 取消匿名访问，勾选基本身份认证<br> 重启 IIS 服务器<br> 使用 win2003 的本地账号登录，先设置用户然后抓包登录<br> 使用 wiresahrk 抓包捕获明文用户名密码<br> 获取到了 base64 编码的密文 Authorization: Basic dXNlcjE6MTIzNDU2<br> 使用 w3af 解码 dXNlcjE6MTIzNDU2</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment"># 验证一下</span><br>root@kali:~<span class="token comment"># echo -n “user1:123456” | base64</span><br>    dXNlcjE6MTIzNDU2<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li></ul><br><p>使用 w3af 扫描<br> 选择 w3af 插件<br> audit –&gt; buffer_overflow &amp;&amp; os_commanding<br> ceawl–&gt; web_spider<br> grep<br> 使用 wireshark 抓包</p><br><h4><a id="windows_661"></a>windows集成身份验证</h4><br><p>windows 在未加入域的情况下，默认都是采用集成身份验证<br> 集成 windows 身份认证认证方式：<br> 先提交一个随机数，并用这个随机数加密<br> 等收到密文并解开，对比这个随机数是否一样</p><br><p>Win2003 配置身份认证<br> 在默认网站右键属性 –&gt; 取消匿名访问、勾选集成 windows 身份认证 –&gt; 站点重启<br> w3af 配置扫描选项<br> 选择 w3af 插件<br> audit –&gt; buffer_overflow &amp;&amp; os_commanding<br> ceawl–&gt; web_spider<br> infrastructure<br> 使用 wireshark抓包<br> 身份认证成功返回 200 OK</p><br><h4><a id="_677"></a>基于表单的身份认证</h4><br><p>配置 w3af<br> 查看表单域<br> 选择 w3af 插件<br> audit –&gt; sqli<br> auth –&gt; detailed<br> crawl –&gt; web_spider（only_forward）</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment"># only_forward： 只扫描此IP目标指定子目录</span><br><span class="token comment"># only_forward： 值扫描特定网页等</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li></ul><br><p>抓包</p><br><h4><a id="HTTP_cookie_692"></a>HTTP cookie</h4><br><ul><li>双因素身份认证</li><li>anti-CSRF tokens</li><li>w3af 值接收</li><li>严格格式要求的 cookie 文件（python要求）<br> <img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20200318173443304.png"><br> cookie 格式要求如上<br> 保存 cookie 文件<br> cookie 各项参数解释：<br> 配置扫描插件<br> audit –&gt; sqli、xss<br> crawl –&gt; web_spider（only_forward）</li></ul><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment"># only_forward： 只扫描此IP目标指定子目录</span><br><span class="token comment"># only_forward： 值扫描特定网页等</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.983122;"><li style="color: rgb(153, 153, 153);">1</li></ul><br><h1><a name="t4"></a><a name="t4"></a><a id="_710"></a>结语</h1><br><p>w3af是个很全面的工具<br> 安装有点问题，参考文章开头两篇文章<br> 安装完以后是有GUI的<br> 可以自己摸索</p><br>                </div><div data-report-view="{"mod":"1585297308_001","dest":"https://fishpond.blog.csdn.net/article/details/104949334","extend1":"pc","ab":"new"}"><div></div></div><br>                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/markdown_views-d7a94ec6ab.css" rel="stylesheet"><br>                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/style-f1c5feb645.css" rel="stylesheet"><br>        </div><br>    </article>
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatpay.jpg"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2020/03/19/kali集合/kali第42个/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/142.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/142.jpg">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                ❄Kali linux 学习笔记（四十二）Web渗透——扫描工具之Arachni 2020.3.19</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2020/03/17/kali集合/kali第38个/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/138.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/138.jpg">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                ❄Kali linux 学习笔记（三十八）Web渗透——扫描工具之NIKTO 2020.3.17</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz",
+        appKey: "mgOpfzbkHYqU92CV4IDlAUHQ",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg" itemprop="image" alt="flechazo" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="" itemprop="url" rel="author">flechazo</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div>    
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            // PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 flechazo<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy 2021不闻星河须臾固执走向你</p>
+    </div>
+    <div class="footer-device">
+    <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;">Theme <a href="https://github.com/honjun/hexo-theme-sakura" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a>&<a href="https://www.i-flechazo-y.top/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">flechazo</a>, Powered by Flechazo, Hosted by Coding Pages</a>
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<script src="/js/botui.js"></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+/* <![CDATA[ */
+if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+} else {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+}
+/* ]]> */
+
+</script>
+<script>
+$(document).ready(function() {
+  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+    if ($(".pattern-center").length > 0) { //有图的情况
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+      });
+    } else {
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+      });
+    }
+    var offsetTop = $('.toc').offset().top - 95;
+    window.onscroll = function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop >= offsetTop) {
+        $('.toc').addClass('toc-fixed');
+      } else {
+        $('.toc').removeClass('toc-fixed');
+      }
+    }
+  }
+});
+</script>
+
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">さらflechazoその一见钟情</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="http://github.com/Agoni37C" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="http://weibo.com/mashirozx?is_all=1" class="fa fa-weibo" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=954655431&site=qq&menu=yes" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/categories/技术/">
+                  <i class="fa fa-code" aria-hidden="true"></i>
+                  技术
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/生活/">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                  生活
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://www.yutu.cn/popsoft_1_2.html">
+                  <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                  资源
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/随想/">
+                  <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                  随想
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/转载/">
+                  <i class="fa fa-book" aria-hidden="true"></i>
+                  转载
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            清单
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/tags/美文/">
+                  <i class="fa fa-gift" aria-hidden="true"></i>
+                  美文
+                </a>
+              </li>
+            
+              <li>
+                <a href="/music/">
+                  <i class="fa fa-headphones" aria-hidden="true"></i>
+                  歌单
+                </a>
+              </li>
+            
+              <li>
+                <a href="/photos/">
+                  <i class="fa fa-photo" aria-hidden="true"></i>
+                  图集
+                </a>
+              </li>
+            
+              <li>
+                <a href="/bangumi/">
+                  <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                  番组
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/视频/">
+                  <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                  视频
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/收藏/">
+                  <i class="fa fa-laptop" aria-hidden="true"></i>
+                  收藏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/star/">
+                  <i class="fa fa-gratipay" aria-hidden="true"></i>
+                  追星
+                </a>
+              </li>
+            
+              <li>
+                <a href="/drama/">
+                  <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                  追剧
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/tags/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-tag" aria-hidden="true"></i>
+            标签
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/categories/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-bookmark" aria-hidden="true"></i>
+            分类
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/comment/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+            留言板
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/donate/">
+                  <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                  赞赏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/links/">
+                  <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                  友人
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/log in/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  login
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            杂
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  网站
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/site muban/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  模板
+                </a>
+              </li>
+            
+              <li>
+                <a href="/atom.xml">
+                  <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                  RSS
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 hexo-sakura</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!-- require MetingJS -->
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<meting-js
+
+    id="572492190"
+
+    server="netease"
+
+    type="playlist"
+
+    fixed="true"
+
+    autoplay="false"
+
+    loop="all"
+
+    order="random"
+
+    preload="auto"
+
+    volume="0.7"
+
+    mutex="true"
+
+</meting-js>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"Live2d# 修改项 npm-module package name"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+<script src="/Live2d/autoload.js"></script>
+</html>
+<!-- 样式二（飘动的彩带） -->
+<script src="https://g.joyinshare.com/hc/piao.js" type="text/javascript"></script>
+<!-- 樱花飘落特效 -->
+<script src="https://cdn.jsdelivr.net/gh/wallleap/cdn/js/sakura.js"></script>

